@@ -108,7 +108,7 @@ public class Commons extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		frame = new JFrame("MC's Commons");                  // call constructor with 'createScene()'
+		frame = new JFrame("Group's Commons");                  // call constructor with 'createScene()'
 		frame.getContentPane().add(new Commons(createScene()));
 	}
 	

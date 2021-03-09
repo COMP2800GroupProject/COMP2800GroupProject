@@ -21,7 +21,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
-public class SoundCube extends JPanel {
+public class Room extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -95,14 +95,14 @@ public class SoundCube extends JPanel {
     /* a function to build the content branch and attach to 'scene' */
     private void createScene(BranchGroup scene) {
         TransformGroup content_TG = new TransformGroup();    // create a TransformGroup (TG)
-        content_TG.addChild(new ColorCube(0.4));             // attach a ColorCube to TG
+        content_TG.addChild(new Link(Brandon.createFloor()));             // attach a ColorCube to TG
         content_TG.addChild(pointSound());	                 // attach a PointSound to TG
         scene.addChild(content_TG);	                         // add TG to the scene BranchGroup
         scene.addChild(rotateBehavior(content_TG));          // make TG continuously rotating
     }
 
     /* a constructor to set up and run the application */
-    public SoundCube() {
+    public Room() {
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
         Canvas3D canvas_3D = new Canvas3D(config);
         SimpleUniverse su = new SimpleUniverse(canvas_3D);   // create a SimpleUniverse
@@ -122,8 +122,8 @@ public class SoundCube extends JPanel {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Java3D Demo with Sound"); // NOTE: change XY to your initials
-        frame.getContentPane().add(new SoundCube());         // create an instance of the class
+        JFrame frame = new JFrame("Group Project"); // NOTE: change XY to your initials
+        frame.getContentPane().add(new Room());         // create an instance of the class
         frame.setSize(600, 600);                             // set the size of the JFrame
         frame.setVisible(true);
     }
