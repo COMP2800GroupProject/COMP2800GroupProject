@@ -95,8 +95,12 @@ public class Room extends JPanel {
     /* a function to build the content branch and attach to 'scene' */
     private void createScene(BranchGroup scene) {
         TransformGroup content_TG = new TransformGroup();    // create a TransformGroup (TG)
-        content_TG.addChild(new Link(Brandon.createFloor(10)));             // attach a ColorCube to TG
-        content_TG.addChild(new Link(Brandon.createCeiling(10)));             // attach a ColorCube to TG
+
+        float scale = 10;
+        content_TG.addChild(new Link(Brandon.createFloor(scale)));             // attach a ColorCube to TG
+        content_TG.addChild(new Link(Brandon.createCeiling(scale)));             // attach a ColorCube to TG
+        content_TG.addChild(new Link(Brandon.createNorthWall(scale)));             // attach a ColorCube to TG
+        content_TG.addChild(new Link(Brandon.createEastWall(scale)));             // attach a ColorCube to TG
         content_TG.addChild(pointSound());	                 // attach a PointSound to TG
         scene.addChild(content_TG);	                         // add TG to the scene BranchGroup
         scene.addChild(rotateBehavior(content_TG));          // make TG continuously rotating

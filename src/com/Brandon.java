@@ -6,8 +6,6 @@ import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.TexCoord2f;
 
 public class Brandon {
-
-
     /**
      * @return is a SharedGroup containing the floor object, already textured.
      */
@@ -25,7 +23,9 @@ public class Brandon {
 
         /** Scaling */
         SharedGroup sg = new SharedGroup();
-        sg.addChild(getScaledShape3D(ceiling, scale));
+        TransformGroup tg = new TransformGroup();
+        tg.addChild(ceiling);
+        sg.addChild(getScaledTransformGroup(tg, scale));
         return sg;
     }
 
@@ -46,21 +46,93 @@ public class Brandon {
 
         /** Scaling */
         SharedGroup sg = new SharedGroup();
-        sg.addChild(getScaledShape3D(floor, scale));
+        TransformGroup tg = new TransformGroup();
+        tg.addChild(floor);
+        sg.addChild(getScaledTransformGroup(tg, scale));
+        return sg;
+    }
+
+    /**
+     * @return is a SharedGroup containing the NorthWall object, textured.
+     */
+    public static SharedGroup createNorthWall(float scale){
+        Shape3D[] wallPieces = new Shape3D[4];
+
+        Point3f[][] vertices = {
+                {//nWall0
+                        new Point3f(0, 0.5f, 0),
+                        new Point3f(1, 0.5f, 0),
+                        new Point3f(1, 0.42f, 0),
+                        new Point3f(0, 0.42f, 0)
+                },
+                {//nWall1
+                        new Point3f(0, 0.14f, 0),
+                        new Point3f(1, 0.14f, 0),
+                        new Point3f(1, 0, 0),
+                        new Point3f(0, 0, 0)
+                },
+                {//nWall2
+                        new Point3f(0, 0.42f, 0),
+                        new Point3f(0.41f, 0.42f, 0),
+                        new Point3f(0.41f, 0.14f, 0),
+                        new Point3f(0, 0.01f, 0)
+                },
+                {//nWall3
+                        new Point3f(0.59f, 0.42f, 0),
+                        new Point3f(1, 0.42f, 0),
+                        new Point3f(1, 0.14f, 0),
+                        new Point3f(0.59f, 0.14f, 0)
+                },
+
+        };
+
+        TransformGroup tg = new TransformGroup();
+        for(int i = 0; i < wallPieces.length; i++){
+            wallPieces[i] = new Shape3D();
+            wallPieces[i].setGeometry(getQuadArray(vertices[i]));
+            wallPieces[i].setAppearance(getAppearance("wall.jpg"));
+            tg.addChild(wallPieces[i]);
+        }
+
+        /** Scaling */
+        SharedGroup sg = new SharedGroup();
+        sg.addChild(getScaledTransformGroup(tg, scale));
+        return sg;
+    }
+
+    /**
+     * @return is a SharedGroup containing the EastWall, textured.
+     */
+    public static SharedGroup createEastWall(float scale){
+        Point3f[] vertices = {
+                new Point3f(1, 0, 0),
+                new Point3f(1, 0, 1),
+                new Point3f(1, 0.5f, 1),
+                new Point3f(1, 0.5f, 0)
+        };
+
+        Shape3D wall = new Shape3D();
+        wall.setGeometry(getQuadArray(vertices));
+        wall.setAppearance(getAppearance("wall.jpg"));
+
+        /** Scaling */
+        SharedGroup sg = new SharedGroup();
+        TransformGroup tg = new TransformGroup();
+        tg.addChild(wall);
+        sg.addChild(getScaledTransformGroup(tg, scale));
         return sg;
     }
 
     /**
      * Returns scaled TransformGroup containing the passed Shape3D object after scale
-     * @param shape is a Shape3D
+     * @param tg is a TransformGroup, which can already have other properties
      * @param scale is a float determining the size of the scale
      * @return is a TransformGroup containing the passed Shape3D object after scale
      */
-    private static TransformGroup getScaledShape3D(Shape3D shape, float scale){
+    private static TransformGroup getScaledTransformGroup(TransformGroup tg, float scale){
         Transform3D scaler = new Transform3D();
         scaler.setScale(scale);
-        TransformGroup tg = new TransformGroup(scaler);
-        tg.addChild(shape);
+        tg.setTransform(scaler);
         return tg;
     }
 
