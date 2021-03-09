@@ -56,18 +56,15 @@ public class Main {
         Lightbulb lightbulb = new Lightbulb();
 
         //create lightbulb and light
-        lightbulb.createLightBulb(Commons.Yellow);
+        lightbulb.createLightBulb(Commons.White);
         lightbulb.createLight();
 
         //change transparency of lightbulb depending on if the lightbulb is on or off
         TransparencyAttributes lightOnTA = lightbulb.getLightbulb().getAppearance().getTransparencyAttributes();
-        ColoringAttributes lightOnCA = lightbulb.getLightbulb().getAppearance().getColoringAttributes();
         if(lightbulb.getLight().getEnable()){
             lightOnTA = new TransparencyAttributes(TransparencyAttributes.FASTEST, 0.05f);
-            lightOnCA = new ColoringAttributes(Commons.White, ColoringAttributes.SHADE_GOURAUD);
         }
         lightbulb.getLightbulb().getAppearance().setTransparencyAttributes(lightOnTA);
-        lightbulb.getLightbulb().getAppearance().setColoringAttributes(lightOnCA);
 
         //transform3d to set the position of the light
         Transform3D lightT3D = new Transform3D();

@@ -56,7 +56,7 @@ public class Lightbulb {
         //setup appearance attributes
         ColoringAttributes ca = new ColoringAttributes(color, ColoringAttributes.SHADE_GOURAUD);
         PolygonAttributes pa = new PolygonAttributes();
-        TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 0.70f);
+        TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 0.80f);
 
         //apply appearance attributes
         app.setColoringAttributes(ca);
@@ -65,7 +65,7 @@ public class Lightbulb {
 
         app.setMaterial(setMaterial(color));
 
-        this.sphere = new Sphere(.1f, Sphere.GENERATE_NORMALS, 90, app);
+        this.sphere = new Sphere(.1f, Sphere.GENERATE_NORMALS, 120, app);
 
     }
 
