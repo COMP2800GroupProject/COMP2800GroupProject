@@ -36,6 +36,7 @@ public class SoundCube extends JPanel {
         BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
         rot_beh.setSchedulingBounds(bounds);
         return rot_beh;
+
     }
 
     /* a function to position viewer to 'eye' location */
