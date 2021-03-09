@@ -6,15 +6,33 @@ import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.TexCoord2f;
 
 public class Brandon {
+
+
     /**
      * @return is a SharedGroup containing the floor object, already textured.
      */
-    public static SharedGroup createFloor(){
+    public static SharedGroup createCeiling(float scale){
+        Point3f[] vertices = {
+                new Point3f(0, 0.5f, 0),
+                new Point3f(1, 0.5f, 0),
+                new Point3f(1, 0.5f, 1),
+                new Point3f(0, 0.5f, 1)
+        };
 
-        /** Geometry Code Begins **/
+        Shape3D ceiling = new Shape3D();
+        ceiling.setGeometry(getQuadArray(vertices));
+        ceiling.setAppearance(getAppearance("ceilingtile.jpg"));
 
-        QuadArray floorArray = new QuadArray(4, GeometryArray.COORDINATES | GeometryArray.TEXTURE_COORDINATE_2);
+        /** Scaling */
+        SharedGroup sg = new SharedGroup();
+        sg.addChild(getScaledShape3D(ceiling, scale));
+        return sg;
+    }
 
+    /**
+     * @return is a SharedGroup containing the floor object, already textured.
+     */
+    public static SharedGroup createFloor(float scale){
         Point3f[] vertices = {
                 new Point3f(0, 0, 0),
                 new Point3f(1, 0, 0),
@@ -22,15 +40,49 @@ public class Brandon {
                 new Point3f(0, 0, 1)
         };
 
-        floorArray.setCoordinates(0, vertices);
+        Shape3D floor = new Shape3D();
+        floor.setGeometry(getQuadArray(vertices));
+        floor.setAppearance(getAppearance("carpet.jpg"));
+
+        /** Scaling */
+        SharedGroup sg = new SharedGroup();
+        sg.addChild(getScaledShape3D(floor, scale));
+        return sg;
+    }
+
+    /**
+     * Returns scaled TransformGroup containing the passed Shape3D object after scale
+     * @param shape is a Shape3D
+     * @param scale is a float determining the size of the scale
+     * @return is a TransformGroup containing the passed Shape3D object after scale
+     */
+    private static TransformGroup getScaledShape3D(Shape3D shape, float scale){
+        Transform3D scaler = new Transform3D();
+        scaler.setScale(scale);
+        TransformGroup tg = new TransformGroup(scaler);
+        tg.addChild(shape);
+        return tg;
+    }
+
+    /**
+     * Returns a QuadArray with Coordinates and TextureCoordinates already set up.
+     * @param vertices are the four vertices of the shape.
+     * @return is a QuadArray with Coordinates and TextureCoordinates already set up.
+     */
+    private static QuadArray getQuadArray(Point3f[] vertices){
+        QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES | GeometryArray.TEXTURE_COORDINATE_2);
+
+        quadArray.setCoordinates(0, vertices);
         TexCoord2f texCoord = new TexCoord2f(0,1);
-        floorArray.setTextureCoordinate(0, 0, texCoord);
-        texCoord.set(0, 0);  floorArray.setTextureCoordinate(0, 1, texCoord);
-        texCoord.set(1, 0);  floorArray.setTextureCoordinate(0, 2, texCoord);
-        texCoord.set(1, 1);  floorArray.setTextureCoordinate(0, 3, texCoord);
+        quadArray.setTextureCoordinate(0, 0, texCoord);
+        texCoord.set(0, 0);  quadArray.setTextureCoordinate(0, 1, texCoord);
+        texCoord.set(1, 0);  quadArray.setTextureCoordinate(0, 2, texCoord);
+        texCoord.set(1, 1);  quadArray.setTextureCoordinate(0, 3, texCoord);
 
-        /** Appearance Code Begins **/
+        return quadArray;
+    }
 
+    private static Appearance getAppearance(String filename){
         Appearance appearance = new Appearance();
         TextureUnitState[] tus = new TextureUnitState[1];
         TexCoordGeneration tcg = new TexCoordGeneration();
@@ -39,22 +91,14 @@ public class Brandon {
         TextureAttributes ta = new TextureAttributes();
         ta.setTextureMode(TextureAttributes.MODULATE);
 
-        tus[0] = texState("carpet.jpg", ta, tcg);
+        tus[0] = texState(filename, ta, tcg);
         PolygonAttributes pa = new PolygonAttributes();
         //todo cull bottom of floor for efficiency
         pa.setCullFace(PolygonAttributes.CULL_NONE);
         appearance.setPolygonAttributes(pa);
 
         appearance.setTextureUnitState(tus);
-
-        /** Object Code **/
-        Shape3D floor = new Shape3D();
-        floor.setGeometry(floorArray);
-        floor.setAppearance(appearance);
-
-        SharedGroup sg = new SharedGroup();
-        sg.addChild(floor);
-        return sg;
+        return appearance;
     }
 
     /**
