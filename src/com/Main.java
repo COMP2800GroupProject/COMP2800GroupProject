@@ -1,10 +1,9 @@
 package com;
 
 import org.jogamp.java3d.*;
-import org.jogamp.vecmath.Color3f;
-import org.jogamp.vecmath.Point3d;
-import org.jogamp.vecmath.Point3f;
-import org.jogamp.vecmath.Vector3f;
+import org.jogamp.java3d.utils.geometry.Sphere;
+import org.jogamp.java3d.utils.image.TextureLoader;
+import org.jogamp.vecmath.*;
 
 import java.awt.*;
 
@@ -13,7 +12,6 @@ public class Main {
 
     /**
      * creates a 3D axis, x being horizontal, y being vertical, and z being depth
-     *
      */
     private static void createAxis(TransformGroup sceneTG) {
         LineArray lineArr = new LineArray(6, LineArray.COLOR_3 | LineArray.COORDINATES);
@@ -43,56 +41,18 @@ public class Main {
     }
 
     /**
-     * creates lights using the Lightbulb class
-     *
-     * @param sceneTG transform group to add the lights to
-     */
-    public static void addLights(TransformGroup sceneTG, Vector3f position){
-
-        //transform group for lights - added to sceneTG as child
-        TransformGroup lightTG = new TransformGroup();
-
-        //default lightbulb
-        Lightbulb lightbulb = new Lightbulb();
-
-        //create lightbulb and light
-        lightbulb.createLightBulb(Commons.White);
-        lightbulb.createLight();
-
-        //change transparency of lightbulb depending on if the lightbulb is on or off
-        TransparencyAttributes lightOnTA = lightbulb.getLightbulb().getAppearance().getTransparencyAttributes();
-        if(lightbulb.getLight().getEnable()){
-            lightOnTA = new TransparencyAttributes(TransparencyAttributes.FASTEST, 0.05f);
-        }
-        lightbulb.getLightbulb().getAppearance().setTransparencyAttributes(lightOnTA);
-
-        //transform3d to set the position of the light
-        Transform3D lightT3D = new Transform3D();
-        lightT3D.setTranslation(position);
-        lightTG.setTransform(lightT3D);
-
-        //add lightbulb to transform group
-        lightTG.addChild(lightbulb.getLightbulb());
-        lightTG.addChild(lightbulb.getLight());
-
-        sceneTG.addChild(lightTG);
-
-    }
-
-
-    /**
      * function to set the material of a shape
      *
      * @return Material
      */
     public static Material setMaterial(Color3f color) {
-        int SH = 128;
+        int SH = 256;
         Material ma = new Material();
 
         ma.setAmbientColor(color);
-        ma.setEmissiveColor(new Color3f(color));
-        ma.setDiffuseColor(new Color3f(0.6f, 0.6f, 0.6f));
-        ma.setSpecularColor(new Color3f(1, 1, 1));
+        ma.setEmissiveColor(color);
+        ma.setSpecularColor(Commons.White);
+        ma.setDiffuseColor(Commons.White);
         ma.setShininess(SH);
         ma.setLightingEnable(true);
 
@@ -114,13 +74,16 @@ public class Main {
 
         sceneBG.addChild(Commons.rotateBehavior(10000, sceneTG));
 
-        //function to add lights
-        addLights(sceneTG, new Vector3f(0,1,0));
+        //create new lightbulb
+        /**
+         * creates a new lightbulb - (TransformGroup, Color, Position, Boolean for on/off)
+         */
+        new Lightbulb(sceneTG, Commons.White, new Vector3f(0, 1, 0), true);
 
         return sceneBG;
     }
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             Commons.setEye(new Point3d(2, 2, 2));
             new Commons.MyGUI(createScene(), "COMP2800 Project");
