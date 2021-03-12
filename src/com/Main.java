@@ -1,11 +1,11 @@
 package com;
 
-import org.jogamp.java3d.*;
-import org.jogamp.java3d.utils.geometry.Sphere;
-import org.jogamp.java3d.utils.image.TextureLoader;
-import org.jogamp.vecmath.*;
 
-import java.awt.*;
+import org.jogamp.java3d.BranchGroup;
+import org.jogamp.java3d.Link;
+import org.jogamp.java3d.TransformGroup;
+import org.jogamp.vecmath.Point3d;
+
 
 
 public class Main {
@@ -62,30 +62,26 @@ public class Main {
 
     /* a function to create and return the scene BranchGroup */
     public static BranchGroup createScene() {
-        BranchGroup sceneBG = new BranchGroup(); // create 'objsBG' for content
-        TransformGroup staticSceneTG = new TransformGroup();
-        TransformGroup sceneTG = new TransformGroup();// create a TransformGroup (TG)
 
-        sceneBG.addChild(sceneTG);// add TG to the scene BranchGroup
+        BranchGroup scene = new BranchGroup();
+        TransformGroup content_TG = new TransformGroup();
+        scene.addChild(content_TG);
 
-        //tg and axis function
-        sceneBG.addChild(staticSceneTG);
-        createAxis(staticSceneTG);
+        float scale = 10;
+        content_TG.addChild(new Link(Room.createFloor(scale)));
+        content_TG.addChild(new Link(Room.createCeiling(scale)));
+        content_TG.addChild(new Link(Room.createNorthWall(scale)));
+        content_TG.addChild(new Link(Room.createEastWall(scale)));
+        content_TG.addChild(new Link(Room.createWestWall(scale)));
+        content_TG.addChild(new Link(Room.createSouthWall(scale)));
+        content_TG.addChild(new Link(Room.createBars(scale)));
+        return scene;
 
-        sceneBG.addChild(Commons.rotateBehavior(10000, sceneTG));
-
-        //create new lightbulb
-        /**
-         * creates a new lightbulb - (TransformGroup, Color, Position, Boolean for on/off)
-         */
-        new Lightbulb(sceneTG, Commons.White, new Vector3f(0, 1, 0), true);
-
-        return sceneBG;
     }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            Commons.setEye(new Point3d(2, 2, 2));
+            Commons.setEye(new Point3d(9, 7, 15));
             new Commons.MyGUI(createScene(), "COMP2800 Project");
         });
     }
