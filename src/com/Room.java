@@ -8,7 +8,7 @@ import org.jogamp.vecmath.TexCoord2f;
 
 public class Room {
 
-    private final float BAR_HALF_WIDTH = 0.005f;
+    private final static float BAR_HALF_WIDTH = 0.005f;
 
     /**
      * @return is a SharedGroup containing the floor object, already textured.
@@ -200,23 +200,23 @@ public class Room {
         SharedGroup sg = new SharedGroup();
 
         //South bars (Horizontal)
-        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.95f, 0.5f, 1), new Point3f(0.2f, 0.5f, 1), true), scale));
-        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.95f, 0.45f, 1), new Point3f(0.2f, 0.45f, 1), true), scale));
-        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.70f, 0f, 1), new Point3f(0.2f, 0f, 1), true), scale));
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.95f, 0.5f, 1), new Point3f(0.2f, 0.5f, 1), true), scale)); //top
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.95f, 0.45f, 1), new Point3f(0.2f, 0.45f, 1), true), scale)); //middle
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.70f, 0f, 1), new Point3f(0.2f, 0f, 1), true), scale)); //bottom
 
         // South bars (Vertical)
-        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.95f, 0f, 1), new Point3f(0.95f, 0.5f, 1), false), scale));
-        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.70f, 0f, 1), new Point3f(0.7f, 0.5f, 1), false), scale));
-        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.45f, 0f, 1), new Point3f(0.45f, 0.5f, 1), false), scale));
-        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.2f, 0f, 1), new Point3f(0.2f, 0.5f, 1), false), scale));
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.95f, 0f, 1), new Point3f(0.95f, 0.5f, 1), false), scale)); //left
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.70f, 0f, 1), new Point3f(0.7f, 0.5f, 1), false), scale)); //middle left
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.45f, 0f, 1), new Point3f(0.45f, 0.5f, 1), false), scale)); //middle right
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.2f, 0f, 1), new Point3f(0.2f, 0.5f, 1), false), scale)); //right
 
         // North window bars (horizontal)
-        //sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.45f, 0f, 1), new Point3f(0.45f, 0.5f, 1), false), scale));
-        //sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.2f, 0f, 1), new Point3f(0.2f, 0.5f, 1), false), scale));
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.41f, 0.42f - BAR_HALF_WIDTH, 0), new Point3f(0.59f, 0.42f - BAR_HALF_WIDTH, 0), true), scale)); //top
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.41f, 0.14f + BAR_HALF_WIDTH, 0), new Point3f(0.59f, 0.14f + BAR_HALF_WIDTH, 0), true), scale)); //bottom
 
         // North window bars (vertical)
-        //sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.45f, 0f, 1), new Point3f(0.45f, 0.5f, 1), false), scale));
-        //sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.2f, 0f, 1), new Point3f(0.2f, 0.5f, 1), false), scale));
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.41f + BAR_HALF_WIDTH, 0.42f - 2 * BAR_HALF_WIDTH, 0), new Point3f(0.41f + BAR_HALF_WIDTH, 0.14f + 2 * BAR_HALF_WIDTH, 0), false), scale)); //left
+        sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.59f - BAR_HALF_WIDTH, 0.42f - 2 * BAR_HALF_WIDTH, 0), new Point3f(0.59f - BAR_HALF_WIDTH, 0.14f + 2 * BAR_HALF_WIDTH, 0), false), scale)); //right
 
         return sg;
     }
