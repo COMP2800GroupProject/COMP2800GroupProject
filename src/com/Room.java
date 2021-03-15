@@ -2,9 +2,7 @@ package com;
 
 import org.jogamp.java3d.*;
 import org.jogamp.java3d.utils.image.TextureLoader;
-import org.jogamp.vecmath.Color3f;
-import org.jogamp.vecmath.Point3f;
-import org.jogamp.vecmath.TexCoord2f;
+import org.jogamp.vecmath.*;
 
 public class Room {
 
@@ -217,6 +215,18 @@ public class Room {
         // North window bars (vertical)
         sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.41f + BAR_HALF_WIDTH, 0.42f - 2 * BAR_HALF_WIDTH, 0), new Point3f(0.41f + BAR_HALF_WIDTH, 0.14f + 2 * BAR_HALF_WIDTH, 0), false), scale)); //left
         sg.addChild(getScaledTransformGroup(createBar(new Point3f(0.59f - BAR_HALF_WIDTH, 0.42f - 2 * BAR_HALF_WIDTH, 0), new Point3f(0.59f - BAR_HALF_WIDTH, 0.14f + 2 * BAR_HALF_WIDTH, 0), false), scale)); //right
+
+        // West window bars ()
+        TransformGroup tg = new TransformGroup();
+        Transform3D t3d = new Transform3D();
+        tg.addChild(getScaledTransformGroup(createBar(new Point3f(0.72f, 0.46f - BAR_HALF_WIDTH, 0), new Point3f(0.96f, 0.46f - BAR_HALF_WIDTH, 0), true), scale));//top
+        tg.addChild(getScaledTransformGroup(createBar(new Point3f(0.72f, 0.14f + BAR_HALF_WIDTH, 0), new Point3f(0.96f, 0.14f + BAR_HALF_WIDTH, 0), true), scale));//bottom
+        // West window bars (vertical)
+        tg.addChild(getScaledTransformGroup(createBar(new Point3f(0.72f + BAR_HALF_WIDTH, 0.46f - 2 * BAR_HALF_WIDTH, 0), new Point3f(0.72f + BAR_HALF_WIDTH, 0.14f + 2 * BAR_HALF_WIDTH, 0), false), scale)); //left
+        tg.addChild(getScaledTransformGroup(createBar(new Point3f(0.96f - BAR_HALF_WIDTH, 0.46f - 2 * BAR_HALF_WIDTH, 0), new Point3f(0.96f - BAR_HALF_WIDTH, 0.14f + 2 * BAR_HALF_WIDTH, 0), false), scale)); //right
+        sg.addChild(tg);
+        t3d.setRotation(new AxisAngle4d(0d, 0.5d, 0d, - Math.PI / 2));
+        tg.setTransform(t3d);
 
         return sg;
     }
