@@ -1,11 +1,10 @@
 package com;
 
 
-import org.jogamp.java3d.BranchGroup;
-import org.jogamp.java3d.Link;
-import org.jogamp.java3d.TransformGroup;
+import org.jogamp.java3d.*;
+import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
-
+import org.jogamp.vecmath.Point3f;
 
 
 public class Main {

@@ -7,19 +7,10 @@ import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.Vector3f;
 
-<<<<<<< Updated upstream
-import java.awt.*;
 
-import static com.Main.setMaterial;
-
-public class Lightbulb {
-
-    TransformGroup sceneTG;
-=======
 public class Lightbulb {
 
     TransformGroup lightbulbTG = new TransformGroup();
->>>>>>> Stashed changes
 
     Color3f color;
     Vector3f position;
@@ -31,14 +22,9 @@ public class Lightbulb {
     /**
      * default constructor
      */
-<<<<<<< Updated upstream
-    public Lightbulb(TransformGroup sceneTG, Color3f color, Vector3f position, Boolean on) {
 
-        this.sceneTG = sceneTG;
-=======
     public Lightbulb(Color3f color, Vector3f position, Boolean on) {
 
->>>>>>> Stashed changes
         this.position = position;
         this.color = color;
         this.on = on;
@@ -70,10 +56,6 @@ public class Lightbulb {
         spotLight.setInfluencingBounds(myBounds);
 
         return spotLight;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     }
 
     /**
@@ -125,10 +107,7 @@ public class Lightbulb {
         lightTG.addChild(sphere);
         lightTG.addChild(light);
 
-<<<<<<< Updated upstream
-        sceneTG.addChild(lightTG);
 
-=======
         lightbulbTG.addChild(lightTG);
     }
 
@@ -158,7 +137,6 @@ public class Lightbulb {
         ma.setLightingEnable(true);
 
         return ma;
->>>>>>> Stashed changes
     }
 
 }
