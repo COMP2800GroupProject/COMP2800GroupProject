@@ -1,13 +1,22 @@
 package com;
 
+import java.awt.GraphicsConfiguration;
+import java.awt.event.MouseListener;
+import java.util.Iterator;
+
 import org.jogamp.java3d.Appearance;
+import org.jogamp.java3d.Behavior;
+import org.jogamp.java3d.BoundingSphere;
 import org.jogamp.java3d.BranchGroup;
+import org.jogamp.java3d.Canvas3D;
+import org.jogamp.java3d.ColoringAttributes;
 import org.jogamp.java3d.Geometry;
 import org.jogamp.java3d.ImageComponent2D;
 import org.jogamp.java3d.IndexedLineArray;
 import org.jogamp.java3d.IndexedQuadArray;
 import org.jogamp.java3d.LineArray;
 import org.jogamp.java3d.Link;
+import org.jogamp.java3d.Material;
 import org.jogamp.java3d.PolygonAttributes;
 import org.jogamp.java3d.QuadArray;
 import org.jogamp.java3d.Shape3D;
@@ -18,12 +27,26 @@ import org.jogamp.java3d.Texture2D;
 import org.jogamp.java3d.TextureAttributes;
 import org.jogamp.java3d.Transform3D;
 import org.jogamp.java3d.TransformGroup;
+import org.jogamp.java3d.TransparencyAttributes;
+import org.jogamp.java3d.WakeupCriterion;
+import org.jogamp.java3d.WakeupOnCollisionEntry;
+import org.jogamp.java3d.WakeupOnCollisionExit;
+import org.jogamp.java3d.utils.geometry.ColorCube;
+import org.jogamp.java3d.utils.geometry.Primitive;
+import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.java3d.utils.image.TextureLoader;
+import org.jogamp.java3d.utils.picking.PickResult;
+import org.jogamp.java3d.utils.picking.PickTool;
+import org.jogamp.java3d.utils.universe.SimpleUniverse;
+import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
+import org.jogamp.vecmath.TexCoord2f;
 import org.jogamp.vecmath.TexCoord3f;
 import org.jogamp.vecmath.Vector3d;
 import org.jogamp.vecmath.Vector3f;
+
+import com.jogamp.newt.event.MouseEvent;
 
 /*
 	Creates a function called BuildShape() which takes string argument and returns a 3Dshape associated with string, i.e "cabinet" will build a cabinet
@@ -34,6 +57,8 @@ import org.jogamp.vecmath.Vector3f;
 public class Cab {
 	
 	
+	
+	private static TransformGroup tranny = null; // Global TransformGroup if model has multiple components
 	
 	
 	public static Texture setTexture(String file)
@@ -49,32 +74,64 @@ public class Cab {
 	}
 	
 	
-	public static Appearance app() {
+	public static Appearance app(String type, String selection) {
 		
 		Appearance app = new Appearance();
-		app.setTexture(setTexture("Textures/wood2.jpg"));
+		ColoringAttributes color;
+		
+		if(type == "texture") {
+			
+			if(selection == "screen") {
+				app.setTexture(setTexture("images/map.png"));
+			}
+			
+			else if(selection == "login") {
+				app.setTexture(setTexture("images/" + "login_screen" + ".jpg"));
+			}
+			
+			else {
+				
+				app.setTexture(setTexture("images/wood2.jpg"));
+				TexCoordGeneration tcg = new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR, TexCoordGeneration.TEXTURE_COORDINATE_3);
+				app.setTexCoordGeneration(tcg);
+			}
+			
+			TextureAttributes texture = new TextureAttributes();
+			texture.setTextureMode(TextureAttributes.REPLACE);
+			app.setTextureAttributes(texture);
+			
+			
+			
+			Vector3d scale = new Vector3d(2f,2f,2f);
+			Transform3D transMap = new Transform3D();
+			
+			transMap.setScale(scale);
+			texture.setTextureTransform(transMap);
+		}
+		
+		
+		else if(type == "color") {
+			
+			if(selection == "off") color = new ColoringAttributes(new Color3f(0f, 0f, 0f), ColoringAttributes.FASTEST);
+			
+			else color = new ColoringAttributes(new Color3f(0.1f, 0.1f, 0.1f), ColoringAttributes.FASTEST);
+			
+			
+			app.setColoringAttributes(color);
+		}
+			
 		PolygonAttributes poly = new PolygonAttributes();
 		poly.setCullFace(PolygonAttributes.CULL_NONE);
 		app.setPolygonAttributes(poly);
 		
-		TextureAttributes texture = new TextureAttributes();
-		texture.setTextureMode(TextureAttributes.REPLACE);
-		app.setTextureAttributes(texture);
 		
-		TexCoordGeneration tcg = new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR, TexCoordGeneration.TEXTURE_COORDINATE_3);
-		app.setTexCoordGeneration(tcg);
 		
-		Vector3d scale = new Vector3d(2f,2f,2f);
-		Transform3D transMap = new Transform3D();
-		
-		transMap.setScale(scale);
-		texture.setTextureTransform(transMap);
-		
-		return app;
+	return app;
 	}
 	
 	
 	public static Shape3D BuildShape(String name){ //builds shape depending on what tag is passed through
+		
 		Shape3D shape = new Shape3D();
 		if(name == "desk")
 			shape.setGeometry(DeskDimensions());
@@ -93,11 +150,184 @@ public class Cab {
 		else if(name == "chair") {
 			shape.setGeometry(ChairDimensions());
 		}
+		else if(name == "lamp") {
+			shape.setGeometry(LampBottom());
+			shape.addGeometry(LampTop());
+		}
+		else if(name == "computer") {
+			float x = .25f, y = .25f, z = .025f;
+			tranny = new TransformGroup();
+			Shape3D screen = new Shape3D(CompooterScreen(x-.05f, y-.05f, z), app("color", "off"));
+			screen.setName("screen");
+			screen.setUserData(0);
+			screen.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+			tranny.addChild(new Shape3D(CompooterDimensions(x,y,z), app("color", null)));
+			tranny.addChild(screen);
+			return null;
+		}
 		
 		
-		shape.setAppearance(app());
+		shape.setAppearance(app("texture", "default"));
 		return shape;
 		
+	}
+	
+	
+	public static Geometry CompooterScreen(float x, float y, float z) {
+			IndexedQuadArray side = new IndexedQuadArray(8, QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2, 32);
+			
+			Point3f Coords[] = {
+					new Point3f(x,y,z-.02f), new Point3f(-x,y,z-.02f), new Point3f(-x,-y,z-.02f), new Point3f(x,-y,z-.02f),
+					new Point3f(x,y,z+.02f), new Point3f(-x,y,z+.02f), new Point3f(-x,-y,z+.02f), new Point3f(x,-y,z+.02f),
+			};
+			
+			int[] indices = {
+					0,1,2,3};
+			
+			
+			side.setCoordinateIndices(0,indices);
+			side.setCoordinates(0, Coords);
+			return side;
+	}
+	
+	
+	
+	public static Geometry CompooterDimensions(float x, float y, float z) {
+		IndexedQuadArray side = new IndexedQuadArray(48, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES, 180);
+		
+		Point3f Coords1[] = {
+				new Point3f(-x,-y,z), new Point3f(x,-y,z), new Point3f(x,y,z), new Point3f(-x,y,z),
+				new Point3f(-x + 0.05f,-y +0.05f,z), new Point3f(x-0.05f,-y+0.05f,z), new Point3f(x-0.05f,y-0.05f,z), new Point3f(-x+0.05f,y-0.05f,z), 
+				new Point3f(-x,-y,-z), new Point3f(x,-y,-z), new Point3f(x,y,-z), new Point3f(-x,y,-z), 
+				new Point3f(-x+0.05f,-y+0.05f,-z), new Point3f(x-0.05f,-y+0.05f,-z), new Point3f(x-0.05f,y-0.05f,-z), new Point3f(-x+0.05f,y-0.05f,-z),
+				new Point3f(-x+0.1f,-y+0.1f,-z-.05f), new Point3f(x-0.1f,-y+0.1f,-z-.05f), new Point3f(x-0.1f,y-0.1f,-z-.05f), new Point3f(-x+0.1f,y-0.1f,-z-.05f),
+				
+		};
+		
+		x = .1f;
+		y = -.35f;
+		z = .02f;
+		
+		Point3f Coords2[] = {
+				new Point3f(x,y,z-0.05f), new Point3f(-x,y,z-0.05f), new Point3f(-x,y+.25f,z-0.05f), new Point3f(x,y+.25f,z-0.05f), 
+				new Point3f(x,y,-z-0.05f), new Point3f(-x,y,-z-0.05f), new Point3f(-x,y+.25f,-z-0.05f), new Point3f(x,y+.25f,-z-0.05f), 
+		};
+		
+		x = .2f;
+		y = -.375f;
+		Point3f Coords3[] = {
+				new Point3f(x,y,z), new Point3f(-x,y,z), new Point3f(-x,y+0.025f,z), new Point3f(x,y+0.025f,z), 
+				new Point3f(x,y,-z-0.1f), new Point3f(-x,y,-z-0.1f), new Point3f(-x,y+0.025f,-z-0.1f), new Point3f(x,y+0.025f,-z-0.1f), 
+		};
+		
+		int[] indices = {
+				0,1,5,4,1,2,6,5,2,3,7,6,3,0,4,7,
+				8,9,11,10,9,10,8,11,10,11,9,8,11,8,10,9,
+				0,1,9,8,1,2,10,9,2,3,11,10,3,0,8,11,
+				4,5,13,12,5,6,14,13,6,7,15,14,7,4,12,15,
+				16,17,19,18,17,18,16,19,18,19,17,16,19,16,18,17,
+				16,17,12,13,17,18,14,13,18,19,15,14,19,16,12,15,
+				20,21,22,23,24,25,26,27,21,22,26,25,22,23,27,26,23,20,24,27,
+				28,29,30,31,32,33,34,35,29,30,34,33,28,31,35,32,28,29,33,32,30,31,35,34,
+				};
+		
+		side.setCoordinates(0, Coords1);
+		side.setCoordinates(20, Coords2);
+		side.setCoordinates(28, Coords3);
+		side.setCoordinateIndices(0, indices);
+		return side;
+	}
+	
+	public static Geometry LampBottom() {
+		IndexedQuadArray side = new IndexedQuadArray(48, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES, 180);
+		
+		float x = .2f;
+		float y = .3f;
+		float z = .025f;
+		
+		Point3f Coords1[] = {
+				new Point3f(-x,-y,z), new Point3f(x,-y,z), new Point3f(x,y,z), new Point3f(-x,y,z),
+				new Point3f(-x + 0.05f,-y + 0.1f,z), new Point3f(x-0.05f,-y+0.1f,z), new Point3f(x-0.05f,y-0.05f,z), new Point3f(-x+0.05f,y-0.05f,z),
+				
+		};
+		
+		x = .15f;
+		y = .25f;
+		
+		Point3f Coords2[] = {
+			new Point3f(-x + 0.175f,-y+0.05f,z), new Point3f(x-0.175f,-y+0.05f,z), new Point3f(x,-y+.2f,z), new Point3f(-x,-y+.2f,z),
+			new Point3f(-x,-y+.4f,z), new Point3f(x,-y+.4f,z), new Point3f(x-0.175f,y+.3f,z), new Point3f(-x+0.175f,y+.3f,z),
+			new Point3f(-x,-y+.35f,z), new Point3f(x,-y+.35f,z), new Point3f(-x,-y+.15f,z), new Point3f(x,-y+.15f,z),
+		};
+		
+		
+		Point3f Coords3[] = new Point3f[20];
+		
+		for(int i = 0; i <20; i++) {
+			
+			if(i <8) Coords3[i] = new Point3f(Coords1[i].x, Coords1[i].y, -Coords1[i].z);
+			
+				
+			else Coords3[i] = new Point3f(Coords2[i-8].x, Coords2[i-8].y, -Coords2[i-8].z);
+			
+		}
+		
+		x = .25f;
+		z = z + .025f;
+		y = -.3f;
+		
+		Point3f Coords4[] = {
+				new Point3f(x,y - .025f,z), new Point3f(-x,y- .025f,z), new Point3f(x,y- .025f,-z), new Point3f(-x,y- .025f,-z), 
+				new Point3f(x,y,z), new Point3f(-x,y,z), new Point3f(x,y,-z), new Point3f(-x,y,-z), 
+		};
+		
+		int[] indices = {0,1,5,4,1,2,6,5,2,3,7,6,3,0,4,7,8,9,14,15,10,11,18,19,12,13,17,16,
+				20,21,25,24,21,22,26,25,22,23,27,26,23,20,24,27,28,29,34,35,30,31,38,39,32,33,37,36,
+				0,1,21,20,1,2,22,21,2,3,23,22,3,0,20,23,4,5,25,24,5,6,26,25,6,7,27,26,7,4,24,27,
+				9,14,34,29,8,15,35,28,10,11,31,30,18,19,39,38,12,13,33,32,16,17,37,36,
+				40,41,43,42,44,45,47,46,40,41,45,44,41,42,46,45,42,43,45,46,43,40,44,47
+				};
+		
+		side.setCoordinateIndices(0, indices);
+		side.setCoordinates(0, Coords1);
+		side.setCoordinates(8, Coords2);
+		side.setCoordinates(20, Coords3);
+		side.setCoordinates(40, Coords4);
+		
+		return side;
+	}
+	
+	public static Geometry LampTop() {
+		IndexedQuadArray side = new IndexedQuadArray(44, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES, 180);
+		float r = 0.4f, x, y;
+		Point3f Coords[] = new Point3f[16];
+		
+		for (int i = 0; i < 16; i++) { 
+			
+			x = (float) (Math.cos(Math.PI / 180 * (360/16) * i ) * r);
+			y = (float) (Math.sin(Math.PI / 180 * (360/16) * i ) * r);
+			
+			Coords[i] = new Point3f(x, .3f, y);
+		}
+		
+		side.setCoordinates(0, Coords);
+		r = .15f;
+		
+		for (int i = 0; i < 16; i++) { 
+			
+			x = (float) (Math.cos(Math.PI / 180 * (360/16) * i ) * r);
+			y = (float) (Math.sin(Math.PI / 180 * (360/16) * i ) * r);
+			
+			Coords[i] = new Point3f(x, .7f, y);
+		}
+			
+		int[] indices = { 0,1,17,16,1,2,18,17,2,3,19,18,3,4,20,19,4,5,21,20,5,6,22,21,6,7,23,22,7,8,24,23,8,9,25,24,9,10,26,25,10,11,27,26,11,12,28,27,12,13,29,28,13,14,30,29,14,15,31,30,15,0,16,31};
+		
+		
+		side.setCoordinates(16, Coords);
+		side.setCoordinateIndices(0, indices);
+		
+		return side;
 	}
 	
 	public static Geometry CabinetDimensions() {
@@ -324,9 +554,12 @@ public class Cab {
 		boing.addChild(BuildShape("shelf"));
 		boing.addChild(BuildShape("table"));
 		boing.addChild(BuildShape("chair"));
+		boing.addChild(BuildShape("lamp"));
 		boing.compile();
 		return boing;
 	}
+	
+	
 	
 	public static BranchGroup createScene()//creates the scene
 	{
@@ -335,24 +568,42 @@ public class Cab {
 		TransformGroup trans1 = new TransformGroup();
 		TransformGroup trans = new TransformGroup();
 		Transform3D trans3d = new Transform3D();
-		trans3d.setTranslation(new Vector3f(0,0,0));
-		trans1.addChild(BuildShape("cabinet"));
-		trans.setTransform(trans3d);
-		trans.addChild(trans1);
-		sceneBG.addChild(trans);
+		trans3d.setTranslation(new Vector3f(0,0,0)); //translate image for better view
+		trans3d.setScale(2d);//scale image for better view
 		
-		sceneBG.addChild(Commons.rotateBehavior(10000, trans1));
+		
+		trans1.addChild(BuildShape("computer"));
+		
+		if(tranny != null) { //if build a model with more than one component, returns a transformGroup globally
+			tranny.setTransform(trans3d);
+			trans.addChild(tranny);
+			
+		}
+			
+		else {
+			trans1.setTransform(trans3d);
+			trans.addChild(trans1);
+			
+		}
+		
+		sceneBG.addChild(trans);
+		//when viewing computer turn off rotation to use computer, otherwise gets pretty scuffed
+		sceneBG.addChild(Commons.rotateBehavior(10000, trans)); 
 		
 		return sceneBG;
 	}
-	
+
+
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Commons.setEye(new Point3d(0.05, 1, 4));
+				Commons.setEye(new Point3d(0.05, 0, 4));
 				new Commons.MyGUI(createScene(), "Furniture ");
 			}
 		});
 	}
+	
 
 }
+
+
