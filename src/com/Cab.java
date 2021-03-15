@@ -1,4 +1,4 @@
-package idk;
+package com;
 
 import org.jogamp.java3d.Appearance;
 import org.jogamp.java3d.BranchGroup;
@@ -150,7 +150,7 @@ public class Cab {
 				30,31,26,24,28,30,13,4,22,31,4,13,35,34,13,31,33,35,31,22,32,33,22,4,34,32,
 				36,37,39,38,36,37,41,40,37,39,43,41,39,38,42,43,38,36,40,42,40,41,43,42};
 		
-		side.setColors(0, CommonsES.Clrs);
+		side.setColors(0, Commons.Clrs);
 		side.setCoordinates(0, Coords);
 		side.setCoordinateIndices(0, indices);
 		side.setTextureCoordinateIndices(0,0, indices);
@@ -171,7 +171,7 @@ public class Cab {
 		int[] indices = {0,1,3,2,1,3,7,5,4,5,7,6,2,0,4,6,12,13,15,14,13,17,19,15,17,16,18,19,16,12,14,18,20,21,25,24,22,23,27,26,20,21,23,22,21,25,27,23,24,20,22,26,0,1,9,8,1,5,11,9,
 				5,4,10,11,4,0,8,10,2,3,7,6};
 			
-		side.setColors(0, CommonsES.Clrs);
+		side.setColors(0, Commons.Clrs);
 		side.setCoordinates(0, Coords);
 		side.setCoordinateIndices(0, indices);
 		side.setTextureCoordinateIndices(0,0, indices);
@@ -341,7 +341,7 @@ public class Cab {
 		trans.addChild(trans1);
 		sceneBG.addChild(trans);
 		
-		sceneBG.addChild(CommonsES.rotateBehavior(10000, trans1));
+		sceneBG.addChild(Commons.rotateBehavior(10000, trans1));
 		
 		return sceneBG;
 	}
@@ -349,8 +349,8 @@ public class Cab {
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				CommonsES.setEye(new Point3d(0.05, 1, 4));
-				new CommonsES.MyGUI(createScene(), "Furniture ");
+				Commons.setEye(new Point3d(0.05, 1, 4));
+				new Commons.MyGUI(createScene(), "Furniture ");
 			}
 		});
 	}
