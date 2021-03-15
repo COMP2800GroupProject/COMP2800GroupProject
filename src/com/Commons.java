@@ -37,7 +37,7 @@ public class Commons extends JPanel implements MouseListener {
 
 
 	private static JFrame frame;
-	private static Point3d eye = new Point3d(1.35, 0.35, 2.0);
+	private static Point3d eye = new Point3d(5, 2.5, 1.25);
 	private static Canvas3D canvas_3D;
 	private static PickTool pickTool;
 
@@ -58,9 +58,8 @@ public class Commons extends JPanel implements MouseListener {
 
 	/* a function to position viewer to 'eye' location */
 	public static void defineViewer(SimpleUniverse su) {
-
 	    TransformGroup viewTransform = su.getViewingPlatform().getViewPlatformTransform();
-		Point3d center = new Point3d(0, 0, 0);               // define the point where the eye looks at
+		Point3d center = new Point3d(0, 2.50, 0);               // define the point where the eye looks at
 		Vector3d up = new Vector3d(0, 1, 0);                 // define camera's up direction
 		Transform3D view_TM = new Transform3D();
 		view_TM.lookAt(eye, center, up);
@@ -197,8 +196,4 @@ public class Commons extends JPanel implements MouseListener {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
-
 }
