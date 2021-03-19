@@ -75,6 +75,7 @@ public class Main {
         content_TG.addChild(new Link(Room.createSouthWall(scale)));
         content_TG.addChild(new Link(Room.createBars(scale)));
         content_TG.addChild(new Link(Room.createWindows(scale)));
+        content_TG.addChild(new Link(Room.createDoors(scale)));
         return scene;
 
     }

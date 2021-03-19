@@ -231,14 +231,14 @@ public class Room {
         return sg;
     }
 
-    static TransformGroup createBar(Point3f start, Point3f end, boolean horizontal) {
+    private static TransformGroup createBar(Point3f start, Point3f end, boolean horizontal) {
         float half_width = 0.005f;
         TransformGroup tg = new TransformGroup();
         Shape3D sides[] = new Shape3D[6];
         float startX = start.x, startY = start.y, startZ = start.z;
         float endX = end.x, endY = end.y, endZ = end.z;
         Point3f tmp[];
-        if(horizontal) {
+        if(horizontal)
             tmp = new Point3f[]{
                     new Point3f(startX, startY + half_width, startZ - half_width),
                     new Point3f(startX, startY + half_width, startZ + half_width),
@@ -249,8 +249,7 @@ public class Room {
                     new Point3f(endX, endY - half_width, endZ - half_width),
                     new Point3f(endX, endY - half_width, endZ + half_width)
             };
-        }
-        else{
+        else
             tmp = new Point3f[]{
                     new Point3f(startX - half_width, startY , startZ - half_width),
                     new Point3f(startX + half_width, startY, startZ - half_width),
@@ -262,7 +261,6 @@ public class Room {
                     new Point3f(endX + half_width, endY, endZ + half_width)
 
             };
-        }
         sides[0] = new Shape3D();
         sides[0].setGeometry(getTextureQuadArray(new Point3f[]{tmp[0], tmp[1], tmp[2], tmp[3]}));
         sides[1] = new Shape3D();
@@ -349,6 +347,26 @@ public class Room {
         return quadArray;
     }
 
+    static SharedGroup createDoors(float scale){
+        SharedGroup sg = new SharedGroup();
+        sg.addChild(getScaledTransformGroup(createDoor(new Point3f[]{new Point3f(0.945f, 0.45f,1.005f), new Point3f(0.705f,0.45f,1.005f), new Point3f(0.705f,0f,0.995f), new Point3f(0.945f,0f,0.995f)}), scale));
+        sg.addChild(getScaledTransformGroup(createDoor(new Point3f[]{new Point3f(0.705f,0.45f,0.995f), new Point3f(0.945f, 0.45f,0.995f), new Point3f(0.945f,0f,0.995f), new Point3f(0.705f,0f,0.995f)}), scale));
+        return sg;
+    }
+
+
+    private static TransformGroup createDoor(Point3f[] vertices){
+        TransformGroup tg = new TransformGroup();
+        Shape3D shape = new Shape3D();
+        shape.setGeometry(getTextureQuadArray(vertices));
+        Appearance app = new Appearance();
+        app.setTexture(textureApp("door.jpg"));
+
+        shape.setAppearance(app);
+        tg.addChild(shape);
+        return tg;
+    }
+
     /**
      * Returns scaled TransformGroup containing the passed Shape3D object after scale
      *
@@ -365,19 +383,19 @@ public class Room {
 
     private static Appearance getAppearance(String filename) {
         Appearance appearance = new Appearance();
-        TextureUnitState[] tus = new TextureUnitState[1];
+
         TexCoordGeneration tcg = new TexCoordGeneration();
         tcg.setEnable(false);
 
         TextureAttributes ta = new TextureAttributes();
         ta.setTextureMode(TextureAttributes.MODULATE);
 
-        tus[0] = texState(filename, ta, tcg);
+
         PolygonAttributes pa = new PolygonAttributes();
         pa.setCullFace(PolygonAttributes.CULL_NONE);
         appearance.setPolygonAttributes(pa);
 
-        appearance.setTextureUnitState(tus);
+        appearance.setTexture(textureApp(filename));
         return appearance;
     }
 
@@ -385,23 +403,21 @@ public class Room {
      * Used to apply textures to shape. See createFloor function for use example. J3 - Slide 25
      *
      * @param filename is the name of the texture image including extension
-     * @param ta       TextureAttribute
-     * @param tcg      TexCoordGeneration
      * @return TexturedUnitState with applied texture, attributes, and coordinates
      */
-    private static TextureUnitState texState(String filename, TextureAttributes ta, TexCoordGeneration tcg) {
+    private static Texture textureApp(String filename) {
         filename = "images/" + filename;
         TextureLoader loader = new TextureLoader(filename, null);
         ImageComponent2D image = loader.getImage();
+        if (image == null)
+            System.out.println("Cannot load file:  " + filename);
 
-        if (image == null) System.err.println("Failed to load texture " + filename);
-
+        assert image != null;
         Texture2D texture = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
         texture.setImage(0, image);
 
-        TextureUnitState state = new TextureUnitState(texture, ta, tcg);
-        state.setCapability(TextureUnitState.ALLOW_STATE_WRITE);
-        return state;
+        return texture;
+
     }
 
 }
