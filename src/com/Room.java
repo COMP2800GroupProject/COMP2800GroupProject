@@ -1,6 +1,8 @@
 package com;
 
 import org.jogamp.java3d.*;
+import org.jogamp.java3d.utils.geometry.GeometryInfo;
+import org.jogamp.java3d.utils.geometry.NormalGenerator;
 import org.jogamp.java3d.utils.image.TextureLoader;
 import org.jogamp.vecmath.*;
 
@@ -21,7 +23,7 @@ public class Room {
 
         Shape3D ceiling = new Shape3D();
         ceiling.setGeometry(getTextureQuadArray(vertices));
-        ceiling.setAppearance(getAppearance("ceilingtile.jpg"));
+        ceiling.setAppearance(getAppearance("ceilingtile.jpg", Commons.White));
 
         /* Scaling */
         SharedGroup sg = new SharedGroup();
@@ -44,7 +46,7 @@ public class Room {
 
         Shape3D floor = new Shape3D();
         floor.setGeometry(getTextureQuadArray(vertices));
-        floor.setAppearance(getAppearance("graycarpet.jpg"));
+        floor.setAppearance(getAppearance("graycarpet.jpg", Commons.Grey));
 
         /* Scaling */
         SharedGroup sg = new SharedGroup();
@@ -106,7 +108,7 @@ public class Room {
 
         Shape3D wall = new Shape3D();
         wall.setGeometry(getTextureQuadArray(vertices));
-        wall.setAppearance(getAppearance("wall.jpg"));
+        wall.setAppearance(getAppearance("wall.jpg", Commons.Red));
 
         /* Scaling */
         SharedGroup sg = new SharedGroup();
@@ -188,7 +190,7 @@ public class Room {
         for (int i = 0; i < wallPieces.length; i++) {
             wallPieces[i] = new Shape3D();
             wallPieces[i].setGeometry(getTextureQuadArray(vertices[i]));
-            wallPieces[i].setAppearance(getAppearance("wall.jpg"));
+            wallPieces[i].setAppearance(getAppearance("wall.jpg", Commons.Blue));
             tg.addChild(wallPieces[i]);
         }
         return tg;
@@ -274,7 +276,7 @@ public class Room {
         sides[5] = new Shape3D();
         sides[5].setGeometry(getTextureQuadArray(new Point3f[]{tmp[2], tmp[7], tmp[6], tmp[3]}));
         for(Shape3D side: sides) {
-            side.setAppearance(getAppearance("metal.png"));
+            side.setAppearance(getAppearance("metal.png", Commons.Black));
             tg.addChild(side);
         }
         return tg;
@@ -334,7 +336,7 @@ public class Room {
      * @return is a QuadArray with Coordinates and TextureCoordinates already set up.
      */
     private static QuadArray getTextureQuadArray(Point3f[] vertices) {
-        QuadArray quadArray = new QuadArray(4, QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2);
+        QuadArray quadArray = new QuadArray(4, QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2 | QuadArray.NORMALS);
         quadArray.setCoordinates(0, vertices);
         TexCoord2f texCoord = new TexCoord2f(0, 1);
         quadArray.setTextureCoordinate(0, 0, texCoord);
@@ -344,6 +346,16 @@ public class Room {
         quadArray.setTextureCoordinate(0, 2, texCoord);
         texCoord.set(1, 1);
         quadArray.setTextureCoordinate(0, 3, texCoord);
+
+        //for lighting
+        //generate normals for the textured quadarray
+        NormalGenerator ng = new NormalGenerator();
+        GeometryInfo gi = new GeometryInfo(quadArray);
+
+        ng.generateNormals(gi);
+
+        quadArray.setNormals(0, gi.getNormals());
+
         return quadArray;
     }
 
@@ -381,22 +393,32 @@ public class Room {
         return tg;
     }
 
-    private static Appearance getAppearance(String filename) {
-        Appearance appearance = new Appearance();
 
-        TexCoordGeneration tcg = new TexCoordGeneration();
-        tcg.setEnable(false);
+    private static Appearance getAppearance(String filename, Color3f color) {
+      
+        Texture texture = textureApp(filename);
 
         TextureAttributes ta = new TextureAttributes();
         ta.setTextureMode(TextureAttributes.MODULATE);
 
+        Appearance app = new Appearance();
+        app.setTexture(texture);
+        app.setTextureAttributes(ta);
+
 
         PolygonAttributes pa = new PolygonAttributes();
         pa.setCullFace(PolygonAttributes.CULL_NONE);
-        appearance.setPolygonAttributes(pa);
+        app.setPolygonAttributes(pa);
 
-        appearance.setTexture(textureApp(filename));
-        return appearance;
+        Color3f am = new Color3f(0.2f, 0.2f, 0.2f);
+        Color3f di = new Color3f(1f, 1f, 1f);
+        Color3f sp = new Color3f(1f, 1f, 1f);
+        Color3f em = new Color3f(0f, 0f, 0f);
+
+        Material mat = new Material(Commons.White, Commons.Black, sp, color, 64f);
+        app.setMaterial(mat);
+
+        return app;
     }
 
     /**
