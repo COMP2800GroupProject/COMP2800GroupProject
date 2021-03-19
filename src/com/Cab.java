@@ -59,6 +59,7 @@ public class Cab {
 	
 	
 	private static TransformGroup tranny = null; // Global TransformGroup if model has multiple components
+	private static TransformGroup tranny1 = null;
 	
 	
 	private static Texture setTexture(String file)
@@ -77,24 +78,29 @@ public class Cab {
 	public static Appearance app(String type, String selection) {
 		
 		Appearance app = new Appearance();
-		ColoringAttributes color;
 		
 		if(type == "texture") {
 			
-			if(selection == "screen") {
-				app.setTexture(setTexture("images/metal.png"));
-			}
+			if(selection == "screen") app.setTexture(setTexture("images/metal.png"));
 			
-			else if(selection == "login") {
-				app.setTexture(setTexture("images/" + "MarbleTexture" + ".jpg"));
-			}
 			
-			else {
-				
-				app.setTexture(setTexture("images/wood2.jpg"));
-				TexCoordGeneration tcg = new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR, TexCoordGeneration.TEXTURE_COORDINATE_3);
-				app.setTexCoordGeneration(tcg);
-			}
+			else if(selection == "login") app.setTexture(setTexture("images/" + "MarbleTexture" + ".jpg"));
+			
+			else if(selection == "off") app.setTexture(setTexture("images/" + "black" + ".png"));
+		
+			else if(selection == "computer") app.setTexture(setTexture("images/" + "black_t" + ".jpg"));
+			
+			else if(selection == "chair") app.setTexture(setTexture("images/" + "black_wool" + ".jpg"));
+			
+			else if(selection == "shelf") app.setTexture(setTexture("images/" + "orange_t" + ".jpg"));
+			
+			else if(selection == "lamp_bottom") app.setTexture(setTexture("images/" + "wood5" + ".jpg"));
+			
+			else if(selection == "lamp_top") app.setTexture(setTexture("images/" + "beige" + ".jpg"));
+			
+			else if(selection == "desk") app.setTexture(setTexture("images/" + "wood5" + ".jpg"));
+			
+			else app.setTexture(setTexture("images/wood6.jpg"));
 			
 			TextureAttributes texture = new TextureAttributes();
 			texture.setTextureMode(TextureAttributes.REPLACE);
@@ -102,22 +108,10 @@ public class Cab {
 			
 			
 			
-			Vector3d scale = new Vector3d(2f,2f,2f);
+			Vector3d scale = new Vector3d(4f,1f,1f);
 			Transform3D transMap = new Transform3D();
-			
 			transMap.setScale(scale);
 			texture.setTextureTransform(transMap);
-		}
-		
-		
-		else if(type == "color") {
-			
-			if(selection == "off") color = new ColoringAttributes(new Color3f(0f, 0f, 0f), ColoringAttributes.FASTEST);
-			
-			else color = new ColoringAttributes(new Color3f(0.1f, 0.1f, 0.1f), ColoringAttributes.FASTEST);
-			
-			
-			app.setColoringAttributes(color);
 		}
 			
 		PolygonAttributes poly = new PolygonAttributes();
@@ -133,8 +127,12 @@ public class Cab {
 	private static Shape3D BuildShape(String name){ //builds shape depending on what tag is passed through
 		
 		Shape3D shape = new Shape3D();
-		if(name == "desk")
+		if(name == "desk") {
 			shape.setGeometry(DeskDimensions());
+			shape.setAppearance(app("texture", "desk"));
+			return shape;
+		}
+			
 		
 		else if(name == "cabinet") {
 			shape.setGeometry(CabinetDimensions());		
@@ -142,26 +140,33 @@ public class Cab {
 		
 		else if(name == "shelf") {
 			shape.setGeometry(ShelfDimensions());
+			shape.setAppearance(app("texture", "shelf"));
+			return shape;
 		}
 		
 		else if(name == "table") {
 			shape.setGeometry(TableDimensions());
 		}
+		
 		else if(name == "chair") {
 			shape.setGeometry(ChairDimensions());
+			shape.setAppearance(app("texture", "chair"));
+			return shape;
 		}
 		else if(name == "lamp") {
-			shape.setGeometry(LampBottom());
-			shape.addGeometry(LampTop());
+			tranny1 = new TransformGroup();
+			tranny1.addChild(new Shape3D(LampBottom(), app("texture", "lamp_bottom")));
+			tranny1.addChild(new Shape3D(LampTop(), app("texture", "lamp_top")));
+			return null;
 		}
 		else if(name == "computer") {
 			float x = .25f, y = .25f, z = .025f;
 			tranny = new TransformGroup();
-			Shape3D screen = new Shape3D(CompooterScreen(x-.05f, y-.05f, z), app("color", "off"));
+			Shape3D screen = new Shape3D(CompooterScreen(x-.05f, y-.05f, z), app("texture", "off"));
 			screen.setName("screen");
 			screen.setUserData(0);
 			screen.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
-			tranny.addChild(new Shape3D(CompooterDimensions(x,y,z), app("color", null)));
+			tranny.addChild(new Shape3D(CompooterDimensions(x,y,z), app("texture", "computer")));
 			tranny.addChild(screen);
 			return null;
 		}
@@ -174,7 +179,7 @@ public class Cab {
 	
 	
 	private static Geometry CompooterScreen(float x, float y, float z) {
-			IndexedQuadArray side = new IndexedQuadArray(8, QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2, 32);
+			IndexedQuadArray side = new IndexedQuadArray(8, QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_3, 32);
 			
 			Point3f Coords[] = {
 					new Point3f(x,y,z-.02f), new Point3f(-x,y,z-.02f), new Point3f(-x,-y,z-.02f), new Point3f(x,-y,z-.02f),
@@ -231,10 +236,35 @@ public class Cab {
 				28,29,30,31,32,33,34,35,29,30,34,33,28,31,35,32,28,29,33,32,30,31,35,34,
 				};
 		
+		int[] tindices = {
+				19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,
+				19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,
+				19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,
+				19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,
+				19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,
+				19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,
+				19,16,12,15,19,16,12,15,19,16,12,15,19,16,12,15,
+		};
+		
+		TexCoord3f tc[] = new TexCoord3f[36];
+		
+		for(int i = 0; i < 36 ; i++) {
+			
+			if(i > 19 && i < 28) tc[i] = new TexCoord3f(Coords2[i - 20]);	
+			
+			else if(i > 27) tc[i] = new TexCoord3f(Coords3[i - 28]);
+			
+			else tc[i] = new TexCoord3f(Coords1[i]);
+			
+			side.setTextureCoordinate(0,i, tc[i]);
+			
+		}
+		
 		side.setCoordinates(0, Coords1);
 		side.setCoordinates(20, Coords2);
 		side.setCoordinates(28, Coords3);
 		side.setCoordinateIndices(0, indices);
+		side.setTextureCoordinateIndices(0,0, tindices);
 		return side;
 	}
 	
@@ -288,7 +318,26 @@ public class Cab {
 				40,41,43,42,44,45,47,46,40,41,45,44,41,42,46,45,42,43,45,46,43,40,44,47
 				};
 		
+		int[] indice = {0,1,5,4};
+		
+		TexCoord3f tc[] = new TexCoord3f[48];
+
+		for(int i = 0; i < 48; i++) {
+			
+			if(i >= 8 && i < 20) tc[i] = new TexCoord3f(Coords2[i-8]);
+			
+			else if(i >= 20 && i < 40) tc[i] = new TexCoord3f(Coords3[i-20]);		
+			
+			else if(i >= 40) tc[i] = new TexCoord3f(Coords4[i-40]);	
+			
+			else tc[i] = new TexCoord3f(Coords1[i]);	
+			
+			side.setTextureCoordinate(0,i, tc[i]);
+			
+		}
+		
 		side.setCoordinateIndices(0, indices);
+		side.setTextureCoordinateIndices(0,0, indicer(indice, 180));
 		side.setCoordinates(0, Coords1);
 		side.setCoordinates(8, Coords2);
 		side.setCoordinates(20, Coords3);
@@ -308,6 +357,7 @@ public class Cab {
 			y = (float) (Math.sin(Math.PI / 180 * (360/16) * i ) * r);
 			
 			Coords[i] = new Point3f(x, .3f, y);
+			side.setTextureCoordinate(0,i, new TexCoord3f(Coords[i]));
 		}
 		
 		side.setCoordinates(0, Coords);
@@ -319,13 +369,17 @@ public class Cab {
 			y = (float) (Math.sin(Math.PI / 180 * (360/16) * i ) * r);
 			
 			Coords[i] = new Point3f(x, .7f, y);
+			side.setTextureCoordinate(0,i + 16, new TexCoord3f(Coords[i]));
 		}
+		
+		int[] indice = {15,0,16,31};
 			
 		int[] indices = { 0,1,17,16,1,2,18,17,2,3,19,18,3,4,20,19,4,5,21,20,5,6,22,21,6,7,23,22,7,8,24,23,8,9,25,24,9,10,26,25,10,11,27,26,11,12,28,27,12,13,29,28,13,14,30,29,14,15,31,30,15,0,16,31};
 		
 		
 		side.setCoordinates(16, Coords);
 		side.setCoordinateIndices(0, indices);
+		side.setTextureCoordinateIndices(0, 0, indicer(indice, 180));
 		
 		return side;
 	}
@@ -349,20 +403,34 @@ public class Cab {
 				new Point3f(x,-.05f,z+.01f), new Point3f(0,-.05f,z+.01f), new Point3f(x,1f,z+.01f), new Point3f(0,1f,z+.01f)};
 		
 		
-		int[] indices =  {0,1,3,2,1,0,2,3,0,1,5,4,1,0,4,5,2,0,8,10,0,2,10,8,3,1,9,11,1,3,11,9,3,2,10,11,2,3,11,10,8,9,11,10,9,8,10,11,16,17,19,18,13,17,19,15,16,12,14,18,
-				24,25,27,26,21,25,27,23,24,20,22,26,28,29,31,30,29,33,35,31,33,32,34,35,32,28,30,34,36,37,39,38,37,41,43,39,41,40,42,43,40,36,38,42};
+		int[] indices =  {
+				0,1,3,2,1,3,11,9,9,11,10,8,0,2,10,8,2,3,11,10,0,1,5,4,4,5,7,6,16,17,19,18,13,17,19,15,12,16,18,14,14,15,19,18,24,25,27,26,21,25,27,23,20,24,26,22,22,23,27,26,
+				28,29,31,30,29,33,35,31,28,32,34,30,34,35,31,30,28,29,33,32,36,37,39,38,37,41,43,39,36,40,42,38,38,39,43,42,36,37,41,40
+		};
+				//0,1,3,2,1,0,2,3,0,1,5,4,1,0,4,5,2,0,8,10,0,2,10,8,3,1,9,11,1,3,10,11,2,3,11,10,9,8,10,11,16,17,19,18,13,17,19,15,16,12,14,18,
+				//24,25,27,26,21,25,27,23,24,20,22,26,28,29,31,30,29,33,35,31,33,32,34,35,32,28,30,34,36,37,39,38,37,41,43,39,41,40,42,43,40,36,38,42};
 
 		
+		TexCoord3f tc[] = new TexCoord3f[44];
+
+		for(int i = 0; i < 44; i++) {
+			tc[i] = new TexCoord3f(Coords[i]);			
+			side.setTextureCoordinate(0,i, tc[i]);
+			
+		}
+		
+		int[] indice = {16,17,19,18};
+		//16,17,19,18
 		side.setCoordinates(0, Coords);
 		side.setCoordinateIndices(0, indices);
-		side.setTextureCoordinateIndices(0,0, indices);
+		side.setTextureCoordinateIndices(0,0, indicer(indice, 180));
 		
 		return side;
 	}
 	
 	
 	private static Geometry DeskDimensions() {
-		IndexedQuadArray side = new IndexedQuadArray(44, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES | QuadArray.COLOR_3, 180);
+		IndexedQuadArray side = new IndexedQuadArray(44, IndexedQuadArray.TEXTURE_COORDINATE_3 | IndexedQuadArray.COORDINATES, 124);
 		Point3f Coords[] = {new Point3f(-.5f, -1f, .25f),new Point3f(-.45f,-1f, .25f),new Point3f(-.5f, -1f, .2f),new Point3f(-.45f, -1f, .2f),
 				new Point3f(-.5f, -.75f, .25f),new Point3f(-.45f,-.75f, .25f),new Point3f(-.5f, -.75f, .2f),new Point3f(-.45f, -.75f, .2f),
 				new Point3f(.45f, -1f, .25f),new Point3f(.5f, -1f, .25f),new Point3f(.45f, -1f, .2f),new Point3f(.5f, -1f, .2f),
@@ -379,37 +447,63 @@ public class Cab {
 				16,17,19,18,16,17,21,20,17,19,23,21,19,18,22,23,18,16,20,22,24,25,26,27,24,25,29,28,25,27,31,29,27,26,
 				30,31,26,24,28,30,13,4,22,31,4,13,35,34,13,31,33,35,31,22,32,33,22,4,34,32,
 				36,37,39,38,36,37,41,40,37,39,43,41,39,38,42,43,38,36,40,42,40,41,43,42};
+			
+		TexCoord3f tc[] = new TexCoord3f[44];
+
+		for(int i = 0; i < 44; i++) {
+			tc[i] = new TexCoord3f(Coords[i]);			
+			side.setTextureCoordinate(0,i, tc[i]);
+			
+		}
 		
-		side.setColors(0, Commons.Clrs);
+		int[] indice = {4,13,35,34};
+		
 		side.setCoordinates(0, Coords);
 		side.setCoordinateIndices(0, indices);
-		side.setTextureCoordinateIndices(0,0, indices);
+		side.setTextureCoordinateIndices(0, 0, indicer(indice, 124));
+		
 		return side;
 	}
 	
 	
 	private static Geometry ShelfDimensions() {
-		IndexedQuadArray side = new IndexedQuadArray(28, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES | QuadArray.COLOR_3, 108);
-		Point3f Coords[] = {new Point3f(-.5f,-1f,.1f), new Point3f(.5f,-1f,.1f), new Point3f(-.5f,-1f,-.1f), new Point3f(.5f,-1f,-.1f), 
+		IndexedQuadArray side = new IndexedQuadArray(36, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES, 108);
+		Point3f Coords[] = {
+				new Point3f(-.5f,-1f,.1f), new Point3f(.5f,-1f,.1f), new Point3f(-.5f,-1f,-.1f), new Point3f(.5f,-1f,-.1f), 
 				new Point3f(-.5f,-.3f,.1f), new Point3f(.5f,-.3f,.1f), new Point3f(-.5f,-.3f,-.1f), new Point3f(.5f,-.3f,-.1f),
 				new Point3f(-.45f,-.95f,.1f), new Point3f(.45f,-.95f,.1f), new Point3f(-.45f,-.35f,.1f), new Point3f(.45f,-.35f,.1f), 
 				new Point3f(-.025f,-.95f,.1f), new Point3f(.025f,-.95f,.1f), new Point3f(-.025f,-.35f,.1f), new Point3f(.025f,-.35f,.1f), 
 				new Point3f(-.025f,-.95f,-.1f), new Point3f(.025f,-.95f,-.1f), new Point3f(-.025f,-.35f,-.1f), new Point3f(.025f,-.35f,-.1f), 
 				new Point3f(-.45f,-.675f,.1f), new Point3f(.45f,-.675f,.1f), new Point3f(-.45f,-.625f,.1f), new Point3f(.45f,-.625f,.1f), 
-				new Point3f(-.45f,-.675f,-.1f), new Point3f(.45f,-.675f,-.1f), new Point3f(-.45f,-.625f,-.1f), new Point3f(.45f,-.625f,-.1f)};
+				new Point3f(-.45f,-.675f,-.1f), new Point3f(.45f,-.675f,-.1f), new Point3f(-.45f,-.625f,-.1f), new Point3f(.45f,-.625f,-.1f),
+				new Point3f(-.5f,-.95f,-.1f), new Point3f(.5f,-.95f,-.1f), new Point3f(-.5f,-.95f,.1f), new Point3f(.5f,-.95f,.1f),
+				new Point3f(-.5f,-.35f,-.1f), new Point3f(.5f,-.35f,-.1f), new Point3f(-.5f,-.35f,.1f), new Point3f(.5f,-.35f,.1f),
+				
+		};
 		
 		int[] indices = {0,1,3,2,1,3,7,5,4,5,7,6,2,0,4,6,12,13,15,14,13,17,19,15,17,16,18,19,16,12,14,18,20,21,25,24,22,23,27,26,20,21,23,22,21,25,27,23,24,20,22,26,0,1,9,8,1,5,11,9,
-				5,4,10,11,4,0,8,10,2,3,7,6};
+				5,4,10,11,4,0,8,10,2,3,7,6,28,29,31,30,32,33,35,34};
+		
+		int[] indice = {17,16,18,19};
 			
-		side.setColors(0, Commons.Clrs);
+		//12,13,15,14
+		TexCoord3f tc[] = new TexCoord3f[36];
+
+		for(int i = 0; i < 36; i++) {
+			tc[i] = new TexCoord3f(Coords[i]);			
+			side.setTextureCoordinate(0,i, tc[i]);
+			
+		}
+		
 		side.setCoordinates(0, Coords);
 		side.setCoordinateIndices(0, indices);
-		side.setTextureCoordinateIndices(0,0, indices);
+		side.setTextureCoordinateIndices(0,0, indicer(indice, 108));
 		return side;
 	}
 	
 	private static Geometry TableDimensions() {
-		IndexedQuadArray side = new IndexedQuadArray(60, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES | QuadArray.COLOR_3, 180);
+		
+		IndexedQuadArray side = new IndexedQuadArray(44, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES, 180);
 		Point3f Coords[] = {new Point3f(-.3f, -1f, .25f),new Point3f(-.25f,-1f, .25f),new Point3f(-.3f, -1f, .2f),new Point3f(-.25f, -1f, .2f),
 				new Point3f(-.3f, -.75f, .25f),new Point3f(-.25f,-.75f, .25f),new Point3f(-.3f, -.75f, .2f),new Point3f(-.25f, -.75f, .2f),
 				new Point3f(.25f, -1f, .25f),new Point3f(.3f, -1f, .25f),new Point3f(.25f, -1f, .2f),new Point3f(.3f, -1f, .2f),
@@ -427,10 +521,19 @@ public class Cab {
 				30,31,26,24,28,30,13,4,22,31,4,13,35,34,13,31,33,35,31,22,32,33,22,4,34,32,
 				36,37,39,38,36,37,41,40,37,39,43,41,39,38,42,43,38,36,40,42,40,41,43,42};
 		
+		int[] indice = {0,1,5,4};
+		
+		TexCoord3f tc[] = new TexCoord3f[44];
+
+		for(int i = 0; i < 44; i++) {
+			tc[i] = new TexCoord3f(Coords[i]);			
+			side.setTextureCoordinate(0,i, tc[i]);
+			
+		}
 		
 		side.setCoordinates(0, Coords);
 		side.setCoordinateIndices(0, indices);
-		side.setTextureCoordinateIndices(0,0, indices);
+		side.setTextureCoordinateIndices(0,0, indicer(indice, 180));
 		return side;
 	}
 	
@@ -439,7 +542,7 @@ public class Cab {
 		float z = .5f;
 		float x = -.5f;
 		float y = .5f;
-		IndexedQuadArray side = new IndexedQuadArray(136, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES | QuadArray.COLOR_3, 600);
+		IndexedQuadArray side = new IndexedQuadArray(136, QuadArray.TEXTURE_COORDINATE_3 | QuadArray.COORDINATES, 528);
 		
 		
 		Point3f Coords1[] = { //outer ring of armrest
@@ -534,6 +637,32 @@ public class Cab {
 				
 				};
 		
+		int[] indice = {0,1,11,10};
+		
+		TexCoord3f tc[] = new TexCoord3f[136];
+		
+		for(int i = 0; i < 136; i++) {
+			
+			if(i >= 20 && i < 40) tc[i] = new TexCoord3f(Coords2[i - 20]);	
+			
+			else if(i >= 40 && i < 60) tc[i] = new TexCoord3f(Coords3[i - 40]);
+			
+			else if(i >= 60 && i < 80) tc[i] = new TexCoord3f(Coords4[i - 60]);
+			
+			else if(i >= 80 && i < 94) tc[i] = new TexCoord3f(Coords5[i - 80]);
+			
+			else if(i >= 94 && i < 108) tc[i] = new TexCoord3f(Coords6[i - 94]);
+			
+			else if(i >= 108 && i < 122) tc[i] = new TexCoord3f(Coords7[i - 108]);
+			
+			else if(i >= 122) tc[i] = new TexCoord3f(Coords8[i - 122]); 
+			
+			else tc[i] = new TexCoord3f(Coords1[i]);
+			
+			side.setTextureCoordinate(0,i, tc[i]);
+			
+		}
+		
 		side.setCoordinates(0, Coords1);
 		side.setCoordinates(20,Coords2);
 		side.setCoordinates(40, Coords3);
@@ -543,12 +672,13 @@ public class Cab {
 		side.setCoordinates(108, Coords7);
 		side.setCoordinates(122, Coords8);
 		side.setCoordinateIndices(0, indices);
+		side.setTextureCoordinateIndices(0,0, indicer(indice, 528));
 		return side;
 	}
 	
 	
 	
-	private static TransformGroup Position(Shape3D shape, Vector3f vector, double scale, double rot) {
+	private static TransformGroup Position(Shape3D shape, Vector3f vector, double scale, double rot, int i) {
 		TransformGroup trans = new TransformGroup();
 		TransformGroup scaler = new TransformGroup();
 		Transform3D trans3d = new Transform3D();
@@ -569,7 +699,11 @@ public class Cab {
 			scaler.setTransform(trans3d);
 		}
 		
-		if(shape == null) scaler.addChild(tranny);
+		if(shape == null) 
+			
+			if(i == 6) scaler.addChild(tranny1);
+				
+			else scaler.addChild(tranny);
 			
 		else scaler.addChild(shape);
 		
@@ -579,9 +713,22 @@ public class Cab {
 		return trans;
 	}
 
-	public static Link Togethor() { //enter all translations rotations and scales in this function. Returns a link to sharedgroup
+	private static int[] indicer(int[] indice, int length) {
+		int[] indices = new int[length];
+		
+		for(int i = 0; i < length; i += 4) {
+			indices[i] = indice[0];
+			indices[i+1] = indice[1];
+			indices[i+2] = indice[2];
+			indices[i+3] = indice[3];
+		}
+		
+		return indices;
+	}
+	
+	
+	public static SharedGroup Togethor() { //enter all translations rotations and scales in this function. Returns a link to sharedgroup
 		SharedGroup shared = new SharedGroup();
-		Link link = new Link(shared);
 		
 		Shape3D shapes[] = {
 				BuildShape("desk"), BuildShape("computer"), BuildShape("chair"), BuildShape("chair"),
@@ -602,14 +749,14 @@ public class Cab {
 		};
 		
 		double rot[] = {
-				0, 135 * Math.PI/180, 0, 0, 0, 270 * Math.PI/180, 270 * Math.PI/180, 0, 90 * Math.PI/180
+				0, 180 * Math.PI/180, 0, 0, 0, 270 * Math.PI/180, 270 * Math.PI/180, 0, 90 * Math.PI/180
 		};
 		
-		for(int i = 0; i < 9; i++) {
-			shared.addChild(Position(shapes[i], vector[i], scale[i], rot[i]));
-		}
+		for(int i = 0; i < 9; i++) shared.addChild(Position(shapes[i], vector[i], scale[i], rot[i], i));
+		
+		shared.compile();
 	
-		return link;
+		return shared;
 	}
 	
 	
