@@ -1,6 +1,8 @@
 package com;
 
 import org.jogamp.java3d.*;
+import org.jogamp.java3d.utils.geometry.GeometryInfo;
+import org.jogamp.java3d.utils.geometry.NormalGenerator;
 import org.jogamp.java3d.utils.image.TextureLoader;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3f;
@@ -23,7 +25,7 @@ public class Room {
 
         Shape3D ceiling = new Shape3D();
         ceiling.setGeometry(getTextureQuadArray(vertices));
-        ceiling.setAppearance(getAppearance("ceilingtile.jpg"));
+        ceiling.setAppearance(getAppearance("ceilingtile.jpg", Commons.White));
 
         /* Scaling */
         SharedGroup sg = new SharedGroup();
@@ -46,7 +48,7 @@ public class Room {
 
         Shape3D floor = new Shape3D();
         floor.setGeometry(getTextureQuadArray(vertices));
-        floor.setAppearance(getAppearance("graycarpet.jpg"));
+        floor.setAppearance(getAppearance("graycarpet.jpg", Commons.Grey));
 
         /* Scaling */
         SharedGroup sg = new SharedGroup();
@@ -108,7 +110,7 @@ public class Room {
 
         Shape3D wall = new Shape3D();
         wall.setGeometry(getTextureQuadArray(vertices));
-        wall.setAppearance(getAppearance("wall.jpg"));
+        wall.setAppearance(getAppearance("wall.jpg", Commons.Red));
 
         /* Scaling */
         SharedGroup sg = new SharedGroup();
@@ -190,7 +192,7 @@ public class Room {
         for (int i = 0; i < wallPieces.length; i++) {
             wallPieces[i] = new Shape3D();
             wallPieces[i].setGeometry(getTextureQuadArray(vertices[i]));
-            wallPieces[i].setAppearance(getAppearance("wall.jpg"));
+            wallPieces[i].setAppearance(getAppearance("wall.jpg", Commons.Blue));
             tg.addChild(wallPieces[i]);
         }
         return tg;
@@ -266,7 +268,7 @@ public class Room {
         sides[5] = new Shape3D();
         sides[5].setGeometry(getTextureQuadArray(new Point3f[]{tmp[2], tmp[7], tmp[6], tmp[3]}));
         for(Shape3D side: sides) {
-            side.setAppearance(getAppearance("metal.png"));
+            side.setAppearance(getAppearance("metal.png", Commons.Black));
             tg.addChild(side);
         }
         return tg;
@@ -293,7 +295,7 @@ public class Room {
      * @return is a QuadArray with Coordinates and TextureCoordinates already set up.
      */
     private static QuadArray getTextureQuadArray(Point3f[] vertices) {
-        QuadArray quadArray = new QuadArray(4, QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2);
+        QuadArray quadArray = new QuadArray(4, QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2 | QuadArray.NORMALS);
         quadArray.setCoordinates(0, vertices);
         TexCoord2f texCoord = new TexCoord2f(0, 1);
         quadArray.setTextureCoordinate(0, 0, texCoord);
@@ -303,50 +305,76 @@ public class Room {
         quadArray.setTextureCoordinate(0, 2, texCoord);
         texCoord.set(1, 1);
         quadArray.setTextureCoordinate(0, 3, texCoord);
+
+        //for lighting
+        //generate normals for the textured quadarray
+        NormalGenerator ng = new NormalGenerator();
+        GeometryInfo gi = new GeometryInfo(quadArray);
+
+        ng.generateNormals(gi);
+
+        quadArray.setNormals(0, gi.getNormals());
+
         return quadArray;
     }
 
 
-    private static Appearance getAppearance(String filename) {
-        Appearance appearance = new Appearance();
-        TextureUnitState[] tus = new TextureUnitState[1];
-        TexCoordGeneration tcg = new TexCoordGeneration();
-        tcg.setEnable(false);
+    private static Appearance getAppearance(String filename, Color3f color) {
+
+        TextureLoader loader = new TextureLoader("images/" + filename, null);
+
+        Texture texture = loader.getTexture();
+
+        texture.setBoundaryModeS(Texture.WRAP);
+        texture.setBoundaryModeT(Texture.WRAP);
 
         TextureAttributes ta = new TextureAttributes();
         ta.setTextureMode(TextureAttributes.MODULATE);
 
-        tus[0] = texState(filename, ta, tcg);
+        Appearance app = new Appearance();
+        app.setTexture(texture);
+        app.setTextureAttributes(ta);
+
         PolygonAttributes pa = new PolygonAttributes();
-        //todo cull bottom of floor for efficiency
         pa.setCullFace(PolygonAttributes.CULL_NONE);
-        appearance.setPolygonAttributes(pa);
+        app.setPolygonAttributes(pa);
 
-        appearance.setTextureUnitState(tus);
-        return appearance;
+        Color3f am = new Color3f(0.2f, 0.2f, 0.2f);
+        Color3f di = new Color3f(1f, 1f, 1f);
+        Color3f sp = new Color3f(1f, 1f, 1f);
+        Color3f em = new Color3f(0f, 0f, 0f);
+
+        Material mat = new Material(Commons.White, Commons.Black, sp, color, 64f);
+        app.setMaterial(mat);
+
+//        ColoringAttributes ca = new ColoringAttributes(Commons.Grey, ColoringAttributes.SHADE_GOURAUD);
+//        app.setColoringAttributes(ca);
+
+        return app;
+
     }
 
-    /**
-     * Used to apply textures to shape. See createFloor function for use example. J3 - Slide 25
-     *
-     * @param filename is the name of the texture image including extension
-     * @param ta       TextureAttribute
-     * @param tcg      TexCoordGeneration
-     * @return TexturedUnitState with applied texture, attributes, and coordinates
-     */
-    private static TextureUnitState texState(String filename, TextureAttributes ta, TexCoordGeneration tcg) {
-        filename = "images/" + filename;
-        TextureLoader loader = new TextureLoader(filename, null);
-        ImageComponent2D image = loader.getImage();
-
-        if (image == null) System.err.println("Failed to load texture " + filename);
-
-        Texture2D texture = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
-        texture.setImage(0, image);
-
-        TextureUnitState state = new TextureUnitState(texture, ta, tcg);
-        state.setCapability(TextureUnitState.ALLOW_STATE_WRITE);
-        return state;
-    }
+//    /**
+//     * Used to apply textures to shape. See createFloor function for use example. J3 - Slide 25
+//     *
+//     * @param filename is the name of the texture image including extension
+//     * @param ta       TextureAttribute
+//     * @param tcg      TexCoordGeneration
+//     * @return TexturedUnitState with applied texture, attributes, and coordinates
+//     */
+//    private static TextureUnitState texState(String filename, TextureAttributes ta, TexCoordGeneration tcg) {
+//        filename = "images/" + filename;
+//        TextureLoader loader = new TextureLoader(filename, null);
+//        ImageComponent2D image = loader.getImage();
+//
+//        if (image == null) System.err.println("Failed to load texture " + filename);
+//
+//        Texture2D texture = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, image.getWidth(), image.getHeight());
+//        texture.setImage(0, image);
+//
+//        TextureUnitState state = new TextureUnitState(texture, ta, tcg);
+//        state.setCapability(TextureUnitState.ALLOW_STATE_WRITE);
+//        return state;
+//    }
 
 }

@@ -5,39 +5,10 @@ import org.jogamp.java3d.*;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Point3f;
+import org.jogamp.vecmath.Vector3f;
 
 
 public class Main {
-
-    /**
-     * creates a 3D axis, x being horizontal, y being vertical, and z being depth
-     */
-    private static void createAxis(TransformGroup sceneTG) {
-        LineArray lineArr = new LineArray(6, LineArray.COLOR_3 | LineArray.COORDINATES);
-
-        Point3f origin = new Point3f(0.0f, 0.0f, 0.0f);
-
-        // create x axis
-        lineArr.setCoordinate(0, origin);
-        lineArr.setCoordinate(1, new Point3f(1, 0.0f, 0.0f));
-        lineArr.setColor(0, Commons.Green);
-        lineArr.setColor(1, Commons.Green);
-
-        // create y axis
-        lineArr.setCoordinate(2, origin);
-        lineArr.setCoordinate(3, new Point3f(0.0f, 1, 0.0f));
-        lineArr.setColor(2, Commons.Blue);
-        lineArr.setColor(3, Commons.Blue);
-
-        // create z axis
-        lineArr.setCoordinate(4, origin);
-        lineArr.setCoordinate(5, new Point3f(0.0f, 0.0f, 1));
-        lineArr.setColor(4, Commons.Red);
-        lineArr.setColor(5, Commons.Red);
-
-        sceneTG.addChild(new Shape3D(lineArr));
-
-    }
 
     /**
      * function to set the material of a shape
@@ -65,6 +36,8 @@ public class Main {
         BranchGroup scene = new BranchGroup();
         TransformGroup content_TG = new TransformGroup();
         scene.addChild(content_TG);
+
+        content_TG.addChild(new Lightbulb(Commons.White, new Vector3f(5, 4.9f, 5), true).getTransformGroup());
 
         float scale = 10;
         content_TG.addChild(new Link(Room.createFloor(scale)));
