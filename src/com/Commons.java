@@ -6,16 +6,21 @@ package com;/* *********************************************************
 import org.jogamp.java3d.*;
 import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.ColorCube;
+import org.jogamp.java3d.utils.picking.PickResult;
+import org.jogamp.java3d.utils.picking.PickTool;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
 import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector3d;
 
+import com.jogamp.newt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class Commons extends JPanel {
+public class Commons extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 1L;
 	public final static Color3f Red = new Color3f(1.0f, 0.0f, 0.0f);
 	public final static Color3f Green = new Color3f(0.0f, 1.0f, 0.0f);
@@ -33,7 +38,9 @@ public class Commons extends JPanel {
 
 
 	private static JFrame frame;
-	private static Point3d eye = new Point3d(1.35, 0.35, 2.0);
+	private static Point3d eye = new Point3d(5, 2.5, 1.25);
+	private static Canvas3D canvas_3D;
+	private static PickTool pickTool;
 
 	/* a function to create a rotation behavior and refer it to 'my_TG' */
 	public static RotationInterpolator rotateBehavior(int r_num, TransformGroup my_TG) {
@@ -52,9 +59,8 @@ public class Commons extends JPanel {
 
 	/* a function to position viewer to 'eye' location */
 	public static void defineViewer(SimpleUniverse su) {
-
 	    TransformGroup viewTransform = su.getViewingPlatform().getViewPlatformTransform();
-		Point3d center = new Point3d(0, 0, 0);               // define the point where the eye looks at
+		Point3d center = new Point3d(0, 2.50, 0);               // define the point where the eye looks at
 		Vector3d up = new Vector3d(0, 1, 0);                 // define camera's up direction
 		Transform3D view_TM = new Transform3D();
 		view_TM.lookAt(eye, center, up);
@@ -94,7 +100,10 @@ public class Commons extends JPanel {
 	/* a constructor to set up and run the application */
 	public Commons(BranchGroup sceneBG) {
 		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
-		Canvas3D canvas_3D = new Canvas3D(config);
+		canvas_3D = new Canvas3D(config);
+		canvas_3D.addMouseListener(this);
+		pickTool = new PickTool(sceneBG);
+		pickTool.setMode(PickTool.BOUNDS);
 		SimpleUniverse su = new SimpleUniverse(canvas_3D);   // create a SimpleUniverse
 		defineViewer(su);                                    // set the viewer's location
 
@@ -120,5 +129,72 @@ public class Commons extends JPanel {
 			frame.getContentPane().add(new Commons(branchGroup));
 			pack();
 		}		
+	}
+	
+	
+	public void mouseClicked(java.awt.event.MouseEvent e) { //register mouse clicks for the computer screen
+		int x = e.getX(); int y = e.getY();
+		Point3d point3d = new Point3d(), center = new Point3d();
+		canvas_3D.getPixelLocationInImagePlate(x, y, point3d);
+		canvas_3D.getCenterEyeInImagePlate(center);
+		
+		Transform3D transform3D = new Transform3D();
+		canvas_3D.getImagePlateToVworld(transform3D);
+		transform3D.transform(point3d);
+		transform3D.transform(center);
+		
+		Vector3d mouseVec = new Vector3d();
+		mouseVec.sub(point3d, center);
+		mouseVec.normalize();
+		pickTool.setShapeRay(point3d, mouseVec);
+		
+		if(pickTool.pickClosest() != null) {
+			
+			PickResult pickResult = pickTool.pickClosest();
+			Shape3D screen = (Shape3D)pickResult.getNode(PickResult.SHAPE3D);
+			
+			if((int) screen.getUserData() == 0) {
+				screen.setAppearance(Cab.app("texture", "screen"));
+				screen.setUserData(1);
+			}
+			else{
+				screen.setAppearance(Cab.app("texture", "login"));
+				screen.setUserData(0);
+			}
+			
+		}
+		
+	}
+
+	//inherited methods ignore for now
+	
+	@Override
+	public void mousePressed(java.awt.event.MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseReleased(java.awt.event.MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseEntered(java.awt.event.MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseExited(java.awt.event.MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

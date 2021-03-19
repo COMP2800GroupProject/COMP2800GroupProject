@@ -47,13 +47,15 @@ public class Main {
         content_TG.addChild(new Link(Room.createWestWall(scale)));
         content_TG.addChild(new Link(Room.createSouthWall(scale)));
         content_TG.addChild(new Link(Room.createBars(scale)));
+        content_TG.addChild(new Link(Room.createWindows(scale)));
+        content_TG.addChild(new Link(Room.createDoors(scale)));
         return scene;
 
     }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            Commons.setEye(new Point3d(9, 7, 15));
+            Commons.setEye(new Point3d(5, 2.5, 1.25));
             new Commons.MyGUI(createScene(), "COMP2800 Project");
         });
     }
