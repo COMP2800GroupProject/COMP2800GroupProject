@@ -1,26 +1,29 @@
 package com;/* *********************************************************
  * For use by students to work on assignments and project.
- * Permission required material. Contact: xyuan@uwindsor.ca 
+ * Permission required material. Contact: xyuan@uwindsor.ca
  **********************************************************/
 
 import org.jogamp.java3d.*;
-import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.ColorCube;
 import org.jogamp.java3d.utils.picking.PickResult;
 import org.jogamp.java3d.utils.picking.PickTool;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
-import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector3d;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import com.jogamp.newt.event.MouseEvent;
+
 import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Commons extends JPanel implements MouseListener {
+
 	private static final long serialVersionUID = 1L;
 	public final static Color3f Red = new Color3f(1.0f, 0.0f, 0.0f);
 	public final static Color3f Green = new Color3f(0.0f, 1.0f, 0.0f);
@@ -31,14 +34,15 @@ public class Commons extends JPanel implements MouseListener {
 	public final static Color3f Magenta = new Color3f(1.0f, 0.0f, 1.0f);
 	public final static Color3f White = new Color3f(1.0f, 1.0f, 1.0f);
 	public final static Color3f Grey = new Color3f(0.5f, 0.5f, 0.5f);
-	public final static Color3f Black = new Color3f(0f, 0f, 0f);
 	public final static Color3f[] Clrs = {Blue, Green, Red, Yellow,
 			Cyan, Orange, Magenta, Grey};
 	public final static int clr_num = 8;
+	private static SoundUtilityJOAL soundJOAL;
+	private static String snd_pt = "song";
 
 
 	private static JFrame frame;
-	private static Point3d eye = new Point3d(5, 2.5, 1.25);
+	private static Point3d eye = new Point3d(1.35, 0.35, 2.0);
 	private static Canvas3D canvas_3D;
 	private static PickTool pickTool;
 
@@ -59,8 +63,9 @@ public class Commons extends JPanel implements MouseListener {
 
 	/* a function to position viewer to 'eye' location */
 	public static void defineViewer(SimpleUniverse su) {
+
 	    TransformGroup viewTransform = su.getViewingPlatform().getViewPlatformTransform();
-		Point3d center = new Point3d(0, 2.50, 0);               // define the point where the eye looks at
+		Point3d center = new Point3d(0, 0, 0);               // define the point where the eye looks at
 		Vector3d up = new Vector3d(0, 1, 0);                 // define camera's up direction
 		Transform3D view_TM = new Transform3D();
 		view_TM.lookAt(eye, center, up);
@@ -152,14 +157,31 @@ public class Commons extends JPanel implements MouseListener {
 			
 			PickResult pickResult = pickTool.pickClosest();
 			Shape3D screen = (Shape3D)pickResult.getNode(PickResult.SHAPE3D);
+			TransformGroup s = (TransformGroup)screen.getParent();
+			screen = (Shape3D) s.getChild(1);
 			
-			if((int) screen.getUserData() == 0) {
-				screen.setAppearance(Cab.app("texture", "screen"));
+			if((int) s.getChild(0).getUserData() == 0 || (int) s.getChild(1).getUserData() == 0) {
+				screen.setAppearance(Cab.app("computer", "login"));
+				soundJOAL = new SoundUtilityJOAL();		
+				
+				if (!soundJOAL.load(snd_pt, 3.5f,2.825f,4f, false))     // fix 'snd_pt' at cow location
+					System.out.println("Could not load " + snd_pt);
+				else
+					soundJOAL.play(snd_pt);
+				
+				
 				screen.setUserData(1);
+				s.getChild(0).setUserData(1);
 			}
 			else{
-				screen.setAppearance(Cab.app("texture", "login"));
+				
+				if(soundJOAL.load(snd_pt, 0f, 0f, 10f, false)) {
+					soundJOAL.cleanUp();
+				}
+				
+				screen.setAppearance(Cab.app("computer", "screen"));
 				screen.setUserData(0);
+				s.getChild(0).setUserData(0);
 			}
 			
 		}
