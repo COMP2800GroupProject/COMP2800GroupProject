@@ -40,20 +40,6 @@ public class Lightbulb {
      */
     public Light createLight() {
 
-//        BoundingSphere myBounds = new BoundingSphere(new Point3d(), 1000);
-//
-//        //create a spotlight facing downwards
-//        SpotLight spotLight = new SpotLight();
-//        spotLight.setColor(new Color3f(1f, 1f, 1f));
-//        spotLight.setPosition(new Point3f(0, 0f, 0));
-//        spotLight.setDirection(0, -1, 0);                 //direction of light
-//        spotLight.setAttenuation(1, 0, 0);
-//
-//        //light on by default
-//        spotLight.setEnable(on);
-//
-//        //set bounds of the light
-//        spotLight.setInfluencingBounds(myBounds);
 
         BoundingSphere bounds = new BoundingSphere(new Point3d(position.x,position.y,position.z), Double.MAX_VALUE);
 
