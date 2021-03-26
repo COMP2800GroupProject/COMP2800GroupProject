@@ -4,17 +4,13 @@ package com;/* *********************************************************
  **********************************************************/
 
 import org.jogamp.java3d.*;
-import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.ColorCube;
 import org.jogamp.java3d.utils.picking.PickResult;
 import org.jogamp.java3d.utils.picking.PickTool;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
-import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector3d;
-
-import com.jogamp.newt.event.MouseEvent;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -23,7 +19,7 @@ import java.awt.event.MouseListener;
 import javax.swing.*;
 import java.awt.*;
 
-public class Commons extends JPanel implements MouseListener {
+public class Commons extends JPanel implements MouseListener, KeyListener {
 	private static final long serialVersionUID = 1L;
 	public final static Color3f Red = new Color3f(1.0f, 0.0f, 0.0f);
 	public final static Color3f Green = new Color3f(0.0f, 1.0f, 0.0f);
@@ -85,21 +81,6 @@ public class Commons extends JPanel implements MouseListener {
 	}
 
 
-//	/* a function to allow key navigation with the ViewingPlateform */
-//	private static KeyNavigatorBehavior keyNavigation(SimpleUniverse simple_U) {
-//		ViewingPlatform view_platfm = simple_U.getViewingPlatform();
-//		TransformGroup view_TG = view_platfm.getViewPlatformTransform();
-//
-//
-//
-//		KeyNavigatorBehavior keyNavBeh = new KeyNavigatorBehavior(view_TG);
-//
-//
-//		BoundingSphere view_bounds = new BoundingSphere(new Point3d(), 20.0);
-//		keyNavBeh.setSchedulingBounds(view_bounds);
-//		return keyNavBeh;
-//	}
-
 
 	public static void setEye(Point3d eye_position) {
 		eye = eye_position;
@@ -115,10 +96,9 @@ public class Commons extends JPanel implements MouseListener {
 		pickTool.setMode(PickTool.BOUNDS);
 		SimpleUniverse su = new SimpleUniverse(canvas_3D);   // create a SimpleUniverse
 
-		Camera camera = new Camera(); //setup camera
-		KeyNavigatorBehavior cameraKeyNav = camera.defineCamera(su); //setup the camera
-		sceneBG.addChild(cameraKeyNav); // adding key movement to camera
-		System.out.println("Hello");
+		Camera camera = new Camera(su); //setup camera
+
+		sceneBG.addChild(camera.getKeyNavBeh()); // adding key movement to camera
 		System.out.println(su.getCanvas().isFocusable());
 
         sceneBG.compile(); // add moveTG branch group to SU
@@ -212,6 +192,42 @@ public class Commons extends JPanel implements MouseListener {
 		
 	}
 
+	/**
+	 * Invoked when a key has been typed.
+	 * See the class description for {@link KeyEvent} for a definition of
+	 * a key typed event.
+	 * @param e the event to be processed
+	 */
+	public void keyTyped(java.awt.event.KeyEvent e){
+
+
+	}
+
+	/**
+	 * Invoked when a key has been pressed.
+	 * See the class description for {@link KeyEvent} for a definition of
+	 * a key pressed event.
+	 * @param e the event to be processed
+	 */
+	public void keyPressed(KeyEvent e){
+
+		if(e.getKeyCode() == KeyEvent.VK_A){
+			System.out.println("a");
+		}
+
+	}
+
+	/**
+	 * Invoked when a key has been released.
+	 * See the class description for {@link KeyEvent} for a definition of
+	 * a key released event.
+	 * @param e the event to be processed
+	 */
+	public void keyReleased(KeyEvent e){
+
+
+
+	}
 
 
 

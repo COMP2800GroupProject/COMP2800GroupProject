@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="j3dexamples">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Java3D/j3dexamples.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -37,7 +37,11 @@ public class Main {
         TransformGroup content_TG = new TransformGroup();
         scene.addChild(content_TG);
 
-        content_TG.addChild(new Lightbulb(Commons.White, new Vector3f(0.5f, 1f, 9), false).getTransformGroup());
+        content_TG.addChild(new Lightbulb(Commons.White, new Vector3f(1.25f, 2.4f, 9), true).getTransformGroup());
+
+        content_TG.addChild(Backgrounds.createBackground());
+
+        content_TG.addChild(new Link(Cab.Togethor()));
 
         float scale = 10;
         content_TG.addChild(new Link(Room.createFloor(scale)));
