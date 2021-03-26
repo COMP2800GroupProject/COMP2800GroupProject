@@ -37,7 +37,7 @@ public class Main {
         TransformGroup content_TG = new TransformGroup();
         scene.addChild(content_TG);
 
-        content_TG.addChild(new Lightbulb(Commons.White, new Vector3f(5, 4.9f, 5), true).getTransformGroup());
+        content_TG.addChild(new Lightbulb(Commons.White, new Vector3f(0.5f, 1f, 9), false).getTransformGroup());
 
         float scale = 10;
         content_TG.addChild(new Link(Room.createFloor(scale)));
@@ -55,7 +55,8 @@ public class Main {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            Commons.setEye(new Point3d(5, 2.5, 1.25));
+
+
             new Commons.MyGUI(createScene(), "COMP2800 Project");
         });
     }
