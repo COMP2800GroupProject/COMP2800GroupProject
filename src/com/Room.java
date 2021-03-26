@@ -1,10 +1,18 @@
 package com;
 
 import org.jogamp.java3d.*;
+import org.jogamp.java3d.loaders.IncorrectFormatException;
+import org.jogamp.java3d.loaders.ParsingErrorException;
+import org.jogamp.java3d.loaders.Scene;
+import org.jogamp.java3d.loaders.objectfile.ObjectFile;
+import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.GeometryInfo;
 import org.jogamp.java3d.utils.geometry.NormalGenerator;
 import org.jogamp.java3d.utils.image.TextureLoader;
+import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.*;
+
+import java.io.FileNotFoundException;
 
 public class Room {
 
@@ -196,7 +204,7 @@ public class Room {
         return tg;
     }
 
-    static SharedGroup createBars(float scale){
+    static SharedGroup createBars(float scale) {
         SharedGroup sg = new SharedGroup();
 
         //South bars (Horizontal)
@@ -227,7 +235,7 @@ public class Room {
         tg.addChild(getScaledTransformGroup(createBar(new Point3f(0.72f + BAR_HALF_WIDTH, 0.46f - 2 * BAR_HALF_WIDTH, 0), new Point3f(0.72f + BAR_HALF_WIDTH, 0.14f + 2 * BAR_HALF_WIDTH, 0), false), scale)); //left
         tg.addChild(getScaledTransformGroup(createBar(new Point3f(0.96f - BAR_HALF_WIDTH, 0.46f - 2 * BAR_HALF_WIDTH, 0), new Point3f(0.96f - BAR_HALF_WIDTH, 0.14f + 2 * BAR_HALF_WIDTH, 0), false), scale)); //right
         sg.addChild(tg);
-        t3d.setRotation(new AxisAngle4d(0d, 0.5d, 0d, - Math.PI / 2));
+        t3d.setRotation(new AxisAngle4d(0d, 0.5d, 0d, -Math.PI / 2));
         tg.setTransform(t3d);
 
         return sg;
@@ -240,7 +248,7 @@ public class Room {
         float startX = start.x, startY = start.y, startZ = start.z;
         float endX = end.x, endY = end.y, endZ = end.z;
         Point3f tmp[];
-        if(horizontal)
+        if (horizontal)
             tmp = new Point3f[]{
                     new Point3f(startX, startY + half_width, startZ - half_width),
                     new Point3f(startX, startY + half_width, startZ + half_width),
@@ -253,11 +261,11 @@ public class Room {
             };
         else
             tmp = new Point3f[]{
-                    new Point3f(startX - half_width, startY , startZ - half_width),
+                    new Point3f(startX - half_width, startY, startZ - half_width),
                     new Point3f(startX + half_width, startY, startZ - half_width),
                     new Point3f(startX + half_width, startY, startZ + half_width),
                     new Point3f(startX - half_width, startY, startZ + half_width),
-                    new Point3f(endX + half_width, endY , endZ - half_width),
+                    new Point3f(endX + half_width, endY, endZ - half_width),
                     new Point3f(endX - half_width, endY, endZ - half_width),
                     new Point3f(endX - half_width, endY, endZ + half_width),
                     new Point3f(endX + half_width, endY, endZ + half_width)
@@ -275,7 +283,7 @@ public class Room {
         sides[4].setGeometry(getTextureQuadArray(new Point3f[]{tmp[0], tmp[5], tmp[4], tmp[1]}));
         sides[5] = new Shape3D();
         sides[5].setGeometry(getTextureQuadArray(new Point3f[]{tmp[2], tmp[7], tmp[6], tmp[3]}));
-        for(Shape3D side: sides) {
+        for (Shape3D side : sides) {
             side.setAppearance(getAppearance("metal.png", Commons.Black));
             tg.addChild(side);
         }
@@ -324,7 +332,7 @@ public class Room {
         QuadArray quadArray = new QuadArray(4, GeometryArray.COORDINATES | GeometryArray.COLOR_4);
         quadArray.setCoordinates(0, vertices);
         for (int i = 0; i < 4; i++)
-            quadArray.setColor(i, new Color4b((byte)255, (byte)255, (byte) 255, (byte) 255));
+            quadArray.setColor(i, new Color4b((byte) 255, (byte) 255, (byte) 255, (byte) 255));
         return quadArray;
     }
 
@@ -359,15 +367,15 @@ public class Room {
         return quadArray;
     }
 
-    static SharedGroup createDoors(float scale){
+    static SharedGroup createDoors(float scale) {
         SharedGroup sg = new SharedGroup();
-        sg.addChild(getScaledTransformGroup(createDoor(new Point3f[]{new Point3f(0.945f, 0.45f,1.005f), new Point3f(0.705f,0.45f,1.005f), new Point3f(0.705f,0f,0.995f), new Point3f(0.945f,0f,0.995f)}), scale));
-        sg.addChild(getScaledTransformGroup(createDoor(new Point3f[]{new Point3f(0.705f,0.45f,0.995f), new Point3f(0.945f, 0.45f,0.995f), new Point3f(0.945f,0f,0.995f), new Point3f(0.705f,0f,0.995f)}), scale));
+        sg.addChild(getScaledTransformGroup(createDoor(new Point3f[]{new Point3f(0.945f, 0.45f, 1.005f), new Point3f(0.705f, 0.45f, 1.005f), new Point3f(0.705f, 0f, 0.995f), new Point3f(0.945f, 0f, 0.995f)}), scale));
+        sg.addChild(getScaledTransformGroup(createDoor(new Point3f[]{new Point3f(0.705f, 0.45f, 0.995f), new Point3f(0.945f, 0.45f, 0.995f), new Point3f(0.945f, 0f, 0.995f), new Point3f(0.705f, 0f, 0.995f)}), scale));
         return sg;
     }
 
 
-    private static TransformGroup createDoor(Point3f[] vertices){
+    private static TransformGroup createDoor(Point3f[] vertices) {
         TransformGroup tg = new TransformGroup();
         Shape3D shape = new Shape3D();
         shape.setGeometry(getTextureQuadArray(vertices));
@@ -386,7 +394,7 @@ public class Room {
      * @param scale is a float determining the size of the scale
      * @return is a TransformGroup containing the passed Shape3D object after scale
      */
-    private static TransformGroup getScaledTransformGroup(TransformGroup tg, float scale) {
+    static TransformGroup getScaledTransformGroup(TransformGroup tg, float scale) {
         Transform3D scaler = new Transform3D();
         scaler.setScale(scale);
         tg.setTransform(scaler);
@@ -395,7 +403,7 @@ public class Room {
 
 
     private static Appearance getAppearance(String filename, Color3f color) {
-      
+
         Texture texture = textureApp(filename);
 
         TextureAttributes ta = new TextureAttributes();
