@@ -4,7 +4,7 @@ import org.jogamp.java3d.*;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
-import org.jogamp.vecmath.Point3f;
+
 import org.jogamp.vecmath.Vector3f;
 
 
@@ -55,21 +55,6 @@ public class Lightbulb {
      * create a spotlight
      */
     public Light createLight() {
-
-//        BoundingSphere myBounds = new BoundingSphere(new Point3d(), 1000);
-//
-//        //create a spotlight facing downwards
-//        SpotLight spotLight = new SpotLight();
-//        spotLight.setColor(new Color3f(1f, 1f, 1f));
-//        spotLight.setPosition(new Point3f(0, 0f, 0));
-//        spotLight.setDirection(0, -1, 0);                 //direction of light
-//        spotLight.setAttenuation(1, 0, 0);
-//
-//        //light on by default
-//        spotLight.setEnable(on);
-//
-//        //set bounds of the light
-//        spotLight.setInfluencingBounds(myBounds);
 
         BoundingSphere bounds = new BoundingSphere(new Point3d(position.x,position.y,position.z), Double.MAX_VALUE);
 

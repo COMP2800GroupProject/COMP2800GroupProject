@@ -4,15 +4,16 @@ package com;/* *********************************************************
  **********************************************************/
 
 import org.jogamp.java3d.*;
-import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.ColorCube;
 import org.jogamp.java3d.utils.picking.PickResult;
 import org.jogamp.java3d.utils.picking.PickTool;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
-import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector3d;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import com.jogamp.newt.event.MouseEvent;
 
