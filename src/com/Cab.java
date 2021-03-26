@@ -774,7 +774,8 @@ public class Cab {
 		double rot[] = {
 				0, 135 * Math.PI/180, 0, 0, 0, 270 * Math.PI/180, 270 * Math.PI/180, 0, 90 * Math.PI/180
 		};
-		
+
+
 		for(int i = 0; i < 9; i++) shared.addChild(Position(shapes[i], vector[i], scale[i], rot[i], i));
 		
 		shared.compile();

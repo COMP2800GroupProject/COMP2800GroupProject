@@ -4,7 +4,7 @@ import org.jogamp.java3d.*;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
-import org.jogamp.vecmath.Point3f;
+
 import org.jogamp.vecmath.Vector3f;
 
 
@@ -18,11 +18,27 @@ public class Lightbulb {
     Light light;
     Boolean on;
 
+    /**
+     * This function creates a pointed light at position (2, 2, 2)
+     * the light source is white
+     *
+     * @param sceneBG BranchGroup the light is to be added to
+     */
+    static void PointLight(BranchGroup sceneBG) {
+        // create bound
+        BoundingSphere myBounds = new BoundingSphere(new Point3d(7.35f, 2f, 9.85f), 7.0);
+        // Create point light and set its properties
+        PointLight myLight = new PointLight(new Color3f(Commons.White), new Point3f(7.35f, 3f, 9.85f), new Point3f(1, 0, 0));
+        myLight.setEnable(true);
+        // set bound
+        myLight.setInfluencingBounds(myBounds);
+        sceneBG.addChild(myLight);
+    }
+
 
     /**
      * default constructor
      */
-
     public Lightbulb(Color3f color, Vector3f position, Boolean on) {
 
         this.position = position;
@@ -39,21 +55,6 @@ public class Lightbulb {
      * create a spotlight
      */
     public Light createLight() {
-
-//        BoundingSphere myBounds = new BoundingSphere(new Point3d(), 1000);
-//
-//        //create a spotlight facing downwards
-//        SpotLight spotLight = new SpotLight();
-//        spotLight.setColor(new Color3f(1f, 1f, 1f));
-//        spotLight.setPosition(new Point3f(0, 0f, 0));
-//        spotLight.setDirection(0, -1, 0);                 //direction of light
-//        spotLight.setAttenuation(1, 0, 0);
-//
-//        //light on by default
-//        spotLight.setEnable(on);
-//
-//        //set bounds of the light
-//        spotLight.setInfluencingBounds(myBounds);
 
         BoundingSphere bounds = new BoundingSphere(new Point3d(position.x,position.y,position.z), Double.MAX_VALUE);
 
