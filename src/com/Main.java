@@ -36,6 +36,9 @@ public class Main {
         content_TG.addChild(new Link(Room.createDoors(scale)));
         content_TG.addChild(new Link(Cab.Togethor()));
         content_TG.addChild(new Link(objects.soundObject()));
+        content_TG.addChild(new Link(Room.createCurtains(scale)));
+        content_TG.addChild(new Link(Room.createExteriorWalls(scale)));
+        //content_TG.addChild(new Link(new TransformGroup(Backgrounds.createBackground())));
         return scene;
 
 

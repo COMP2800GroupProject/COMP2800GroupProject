@@ -14,19 +14,19 @@ import org.jogamp.vecmath.*;
 
 import java.io.FileNotFoundException;
 
-public class Room {
+class Room {
 
     private final static float BAR_HALF_WIDTH = 0.005f;
-
+    private final static float CURTAIN_HEIGHT = 0.05f;
     /**
      * @return is a SharedGroup containing the floor object, already textured.
      */
     static SharedGroup createCeiling(float scale) {
         Point3f[] vertices = {
-                new Point3f(0, 0.5f, 0),
-                new Point3f(1, 0.5f, 0),
-                new Point3f(1, 0.5f, 1),
-                new Point3f(0, 0.5f, 1)
+                new Point3f(-0.5f, 0.5f, 0),
+                new Point3f(-0.5f, 0.5f, 3f),
+                new Point3f(2.5f, 0.5f, 3f),
+                new Point3f(2.5f, 0.5f, 0)
         };
 
         Shape3D ceiling = new Shape3D();
@@ -41,15 +41,12 @@ public class Room {
         return sg;
     }
 
-    /**
-     * @return is a SharedGroup containing the floor object, already textured.
-     */
     static SharedGroup createFloor(float scale) {
         Point3f[] vertices = {
-                new Point3f(0, 0, 0),
-                new Point3f(1, 0, 0),
-                new Point3f(1, 0, 1),
-                new Point3f(0, 0, 1)
+                new Point3f(-0.5f, 0f, 0),
+                new Point3f(-0.5f, 0f, 3f),
+                new Point3f(2.5f, 0f, 3f),
+                new Point3f(2.5f, 0f, 0)
         };
 
         Shape3D floor = new Shape3D();
@@ -124,6 +121,58 @@ public class Room {
         tg.addChild(wall);
         sg.addChild(getScaledTransformGroup(tg, scale));
         return sg;
+    }
+
+    static SharedGroup createExteriorWalls(float scale){
+        Point3f[][] vertices = {
+
+                {//wall1
+                        new Point3f(2.5f, 0.5f, 1f),
+                        new Point3f(2.5f, 0.5f, 3f),
+                        new Point3f(2.5f, 0f, 3f),
+                        new Point3f(2.5f, 0f, 1f)
+                },
+                {//wall2
+                        new Point3f(2.5f, 0.5f, 3f),
+                        new Point3f(-0.5f, 0.5f, 3f),
+                        new Point3f(-0.5f, 0f, 3f),
+                        new Point3f(2.5f, 0f, 3f)
+                },
+                {//wall3
+                        new Point3f(-0.5f, 0.5f, 3f),
+                        new Point3f(-0.5f, 0.5f, 0f),
+                        new Point3f(-0.5f, 0f, 0f),
+                        new Point3f(-0.5f, 0f, 3f)
+                },
+                {//wall4
+                        new Point3f(-0.5f, 0.5f, 0f),
+                        new Point3f(0f, 0.5f, 0f),
+                        new Point3f(0f, 0f, 0f),
+                        new Point3f(-0.5f, 0f, 0f)
+                }
+        };
+
+        SharedGroup sg = new SharedGroup();
+
+        for(Point3f[] verts : vertices){
+            sg.addChild(getScaledTransformGroup(createFullWall(verts), scale));
+        }
+        return sg;
+    }
+
+    /**
+     * @return is a SharedGroup containing the EastWall, textured.
+     */
+    static TransformGroup createFullWall(Point3f[] vertices) {
+        Shape3D wall = new Shape3D();
+        wall.setGeometry(getTextureQuadArray(vertices));
+        wall.setAppearance(getAppearance("wall.jpg", Commons.White));
+
+        /* Scaling */
+        SharedGroup sg = new SharedGroup();
+        TransformGroup tg = new TransformGroup();
+        tg.addChild(wall);
+        return tg;
     }
 
     /**
@@ -386,6 +435,85 @@ public class Room {
         tg.addChild(shape);
         return tg;
     }
+
+    static SharedGroup createCurtains(float scale){
+        Point3f[] positions = {
+                new Point3f(6.95f, 5f, 8.8f),
+                new Point3f(4.45f, 5f, 8.8f),
+                new Point3f(1.12f, 5f, 9.6f - BAR_HALF_WIDTH)
+        };
+        SharedGroup sg = new SharedGroup();
+
+        TransformGroup[] tgs = new TransformGroup[3];
+        Transform3D[] t3ds = new Transform3D[3];
+
+        for(int i = 0; i < positions.length; i++) {
+            tgs[i] = new TransformGroup();
+            t3ds[i] = new Transform3D();
+        }
+
+        tgs[0].addChild(new Link(Room.createCurtain(4.4f, 2.5f - 0.1f)));
+        tgs[1].addChild(new Link(Room.createCurtain(4.4f, 2.5f - 0.1f)));
+        tgs[2].addChild(new Link(Room.createCurtain(3.1f, 2.4f - 0.1f)));
+
+        t3ds[2].rotY(-Math.PI/2);
+
+        for(int i = 0; i< t3ds.length; i++){
+            t3ds[i].setTranslation(new Vector3f(positions[i]));
+            tgs[i].setTransform(t3ds[i]);
+            sg.addChild(tgs[i]);
+        }
+
+        return sg;
+    }
+
+    static SharedGroup createCurtain(float height, float width){
+        int count = (int)(height / CURTAIN_HEIGHT) + 1;
+        Appearance ap = new Appearance();
+        PolygonAttributes pa = new PolygonAttributes();
+        pa.setCullFace(PolygonAttributes.CULL_NONE);
+        ap.setPolygonAttributes(pa);
+
+        SharedGroup sg = new SharedGroup();
+        TransformGroup tg;
+        Transform3D t3d = new Transform3D(), rot = new Transform3D();
+        t3d.rotX(Math.PI/8);
+        for(int i = 0; i < count; i++) {
+            //System.err.println(new Point3f(top.getX(), top.getY() - (CURTAIN_HEIGHT * i) * 2, top.getZ()));
+            tg = curtainPiece(new Point3f(-width / 2, CURTAIN_HEIGHT / 2, width / 2), width);
+            t3d.setTranslation(new Vector3f(0f, 0f - (CURTAIN_HEIGHT * i), 0f));
+            tg.setTransform(t3d);
+            sg.addChild(tg);
+        }
+        return sg;
+    }
+
+    public static TransformGroup curtainPiece(Point3f top, float width) {
+        QuadArray rect = new QuadArray(4, QuadArray.COLOR_3 | QuadArray.COORDINATES);
+
+        rect.setCoordinate(0, new Point3f(top.getX() - width / 2, top.getY(), top.getZ()));
+        rect.setCoordinate(1, new Point3f(top.getX() + width / 2, top.getY(), top.getZ()));
+        rect.setCoordinate(2, new Point3f(top.getX() + width / 2, top.getY() - CURTAIN_HEIGHT, top.getZ()));
+        rect.setCoordinate(3, new Point3f(top.getX() - width / 2, top.getY() - CURTAIN_HEIGHT, top.getZ()));
+
+        for(int i = 0; i < 4; i++) {
+            rect.setColor(i, new Color3f(255, 255, 255));
+        }
+
+        Shape3D rectangle = new Shape3D(rect);
+
+        //shows both sides of the rectangle
+        Appearance ap = new Appearance();
+        PolygonAttributes pa = new PolygonAttributes();
+        pa.setCullFace(PolygonAttributes.CULL_NONE);
+        ap.setPolygonAttributes(pa);
+        rectangle.setAppearance(ap);
+
+        TransformGroup tg = new TransformGroup();
+        tg.addChild(rectangle);
+        return tg;
+    }
+
 
     /**
      * Returns scaled TransformGroup containing the passed Shape3D object after scale
