@@ -18,11 +18,27 @@ public class Lightbulb {
     Light light;
     Boolean on;
 
+    /**
+     * This function creates a pointed light at position (2, 2, 2)
+     * the light source is white
+     *
+     * @param sceneBG BranchGroup the light is to be added to
+     */
+    static void PointLight(BranchGroup sceneBG) {
+        // create bound
+        BoundingSphere myBounds = new BoundingSphere(new Point3d(7.35f, 2f, 9.85f), 7.0);
+        // Create point light and set its properties
+        PointLight myLight = new PointLight(new Color3f(Commons.White), new Point3f(7.35f, 3f, 9.85f), new Point3f(1, 0, 0));
+        myLight.setEnable(true);
+        // set bound
+        myLight.setInfluencingBounds(myBounds);
+        sceneBG.addChild(myLight);
+    }
+
 
     /**
      * default constructor
      */
-
     public Lightbulb(Color3f color, Vector3f position, Boolean on) {
 
         this.position = position;
