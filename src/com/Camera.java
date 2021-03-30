@@ -1,29 +1,40 @@
 package com;
 
+import org.jdesktop.j3d.examples.collision.Box;
 import org.jogamp.java3d.*;
 import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
+import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Point3d;
+import org.jogamp.vecmath.Point3f;
 import org.jogamp.vecmath.Vector3d;
+import org.jogamp.vecmath.Vector3f;
 
 import javax.xml.crypto.dsig.Transform;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
 
 public class Camera implements KeyListener {
 
     private Point3d defaultPos = new Point3d(5, 2.5, 1.25);
 
+    BoundingSphere bounds = new BoundingSphere(new Point3d(0,0,0), Double.MAX_VALUE);
+
     TransformGroup cameraTG;
     KeyNavigatorBehavior keyNavBeh;
 
+    public Camera(ViewPlatform vp, TransformGroup vpTG, BranchGroup bg){
 
-    public Camera(SimpleUniverse su){
+        defineCamera(vpTG);
 
-        defineCamera(su);
+        vpTG.addChild(vp);
 
-        //addInvisSphere();
+        bg.addChild(vpTG);
+
+
 
     }
 
@@ -31,28 +42,22 @@ public class Camera implements KeyListener {
 //        return this.cameraTG;
 //    }
 
-    void defineCamera(SimpleUniverse su){
-        this.cameraTG = su.getViewingPlatform().getViewPlatformTransform();
+    void defineCamera(TransformGroup vpTG){
 
-//        cameraTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-//        cameraTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        addInvisSphere(vpTG);
 
         Point3d center = new Point3d(0, 2.50, 0);               // define the point where the defaultPos looks at
         Vector3d up = new Vector3d(0, 1, 0);                 // define camera's up direction
         Transform3D view_TM = new Transform3D();
         view_TM.lookAt(defaultPos, center, up);
         view_TM.invert();
-        cameraTG.setTransform(view_TM);// set the TransformGroup of ViewingPlatform
+        vpTG.setTransform(view_TM);// set the TransformGroup of ViewingPlatform
 
 
-        this.keyNavBeh = new KeyNavigatorBehavior(cameraTG);
+        this.keyNavBeh = new KeyNavigatorBehavior(vpTG);
         BoundingSphere view_bounds = new BoundingSphere(new Point3d(), Double.MAX_VALUE);
         keyNavBeh.setSchedulingBounds(view_bounds);
 
-
-        //for keylistener -- not working atm
-        su.getCanvas().addKeyListener(this);
-        su.getCanvas().setFocusable(true);
 
     }
 
@@ -63,17 +68,35 @@ public class Camera implements KeyListener {
     /**
      * creates an invisible sphere for the camera. used for collision
      */
-    void addInvisSphere(){
+    void addInvisSphere(TransformGroup vpTG){
         //create invisible ball for the camera. used for collision
         Appearance app = new Appearance();
-        TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1);
+
+        ColoringAttributes ca = new ColoringAttributes(Commons.White, ColoringAttributes.FASTEST);
+
+        PolygonAttributes pa = new PolygonAttributes();
+        pa.setCullFace(PolygonAttributes.CULL_NONE);
+
+        TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 0.5f);
+
+        app.setColoringAttributes(ca);
         app.setTransparencyAttributes(ta);
-
-
+        app.setPolygonAttributes(pa);
 
         //sphere for the camera, used for collision
-        Sphere cameraSphere = new Sphere(.1f, Sphere.GENERATE_NORMALS, 120, app);
-        cameraTG.addChild(cameraSphere);
+        Shape3D cameraBox = new Box(2f, 2f, 2f);
+
+        cameraBox.setAppearance(app);
+
+        cameraBox.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+        cameraBox.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
+
+        CollisionDetectCamera cd = new CollisionDetectCamera(cameraBox);
+
+        vpTG.addChild(cameraBox);
+
+        vpTG.addChild(cd);
+
     }
 
     /**

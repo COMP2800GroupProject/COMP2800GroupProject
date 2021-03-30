@@ -8,6 +8,8 @@ import org.jogamp.java3d.utils.geometry.ColorCube;
 import org.jogamp.java3d.utils.picking.PickResult;
 import org.jogamp.java3d.utils.picking.PickTool;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
+import org.jogamp.java3d.utils.universe.Viewer;
+import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector3d;
@@ -17,6 +19,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.*;
+import javax.xml.crypto.dsig.Transform;
 import java.awt.*;
 
 public class Commons extends JPanel implements MouseListener, KeyListener {
@@ -80,12 +83,6 @@ public class Commons extends JPanel implements MouseListener, KeyListener {
 		return scene;
 	}
 
-
-
-	public static void setEye(Point3d eye_position) {
-		eye = eye_position;
-	}
-
 	/* a constructor to set up and run the application */
 	public Commons(BranchGroup sceneBG) {
 		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
@@ -94,14 +91,33 @@ public class Commons extends JPanel implements MouseListener, KeyListener {
 
 		pickTool = new PickTool(sceneBG);
 		pickTool.setMode(PickTool.BOUNDS);
-		SimpleUniverse su = new SimpleUniverse(canvas_3D);   // create a SimpleUniverse
 
-		Camera camera = new Camera(su); //setup camera
+		ViewPlatform vp = new ViewPlatform();
+
+		View v = new View();
+		v.addCanvas3D(canvas_3D);
+
+		PhysicalBody body = new PhysicalBody();
+		PhysicalEnvironment environment = new PhysicalEnvironment();
+
+		v.setPhysicalBody(body);
+		v.setPhysicalEnvironment(environment);
+
+		v.attachViewPlatform(vp);
+
+		TransformGroup vpTG = new TransformGroup();
+
+		vpTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		vpTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+
+		SimpleUniverse su = new SimpleUniverse();   // create a SimpleUniverse
+
+		Camera camera = new Camera(vp, vpTG, sceneBG); //setup camera
 
 		sceneBG.addChild(camera.getKeyNavBeh()); // adding key movement to camera
-		System.out.println(su.getCanvas().isFocusable());
 
         sceneBG.compile(); // add moveTG branch group to SU
+
 		su.addBranchGraph(sceneBG); // attach the scene to SimpleUniverse
 
 		setLayout(new BorderLayout());
@@ -144,15 +160,18 @@ public class Commons extends JPanel implements MouseListener, KeyListener {
 		if(pickTool.pickClosest() != null) {
 			
 			PickResult pickResult = pickTool.pickClosest();
-			Shape3D screen = (Shape3D)pickResult.getNode(PickResult.SHAPE3D);
+			Shape3D picked = (Shape3D)pickResult.getNode(PickResult.SHAPE3D);
 			
-			if((int) screen.getUserData() == 0) {
-				screen.setAppearance(Cab.app("texture", "screen"));
-				screen.setUserData(1);
+			if((int) picked.getUserData() == 0 && picked.getName().equals("screen")) {
+				picked.setAppearance(Cab.app("texture", "screen"));
+				picked.setUserData(1);
+			}
+			if((int) picked.getUserData() == 0 && picked.getName().equals("lightbulb")){
+
 			}
 			else{
-				screen.setAppearance(Cab.app("texture", "login"));
-				screen.setUserData(0);
+				picked.setAppearance(Cab.app("texture", "login"));
+				picked.setUserData(0);
 			}
 			
 		}
@@ -211,9 +230,6 @@ public class Commons extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void keyPressed(KeyEvent e){
 
-		if(e.getKeyCode() == KeyEvent.VK_A){
-			System.out.println("a");
-		}
 
 	}
 
