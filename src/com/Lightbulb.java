@@ -73,8 +73,6 @@ public class Lightbulb {
 
         app.setMaterial(setMaterial(color));
         Sphere lb = new Sphere(.1f, Sphere.GENERATE_NORMALS, 120, app);
-        lb.setName("lightbulb");
-        lb.setUserData(0);
 
         lb.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 

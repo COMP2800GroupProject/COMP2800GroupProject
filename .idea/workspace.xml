@@ -2,22 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2252079f-035f-4ada-a752-5ada142b0dfe" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/COMP2800GroupProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/j3dcore.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/j3dexamples.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/j3dutils.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/jogamp_fat.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/vecmath.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/CollisionDetectCamera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/Background.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/Backgrounds.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/Cab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/Cab.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/COMP2800GroupProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/COMP2800GroupProject.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/Commons.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/Commons.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/Lightbulb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/Lightbulb.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/Main.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,12 +16,12 @@
     <session id="-1057285177">
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="1579" />
+          <entry key="java" value="1597" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="1579" />
+          <entry key="JAVA" value="1597" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
@@ -63,14 +50,14 @@
     <favorites_list name="COMP2800GroupProject" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4657368">
+    <splitter split-orientation="horizontal" split-proportion="0.49733475">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/com/Lightbulb.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="187">
-                  <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+                <state>
+                  <caret line="54" column="12" lean-forward="true" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -79,25 +66,31 @@
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/com/CollisionDetectCamera.java">
+            <entry file="file://$PROJECT_DIR$/src/com/Camera.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="285">
-                  <caret line="29" column="26" lean-forward="true" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="26" />
+                <state relative-caret-position="510">
+                  <caret line="63" column="32" selection-start-line="63" selection-start-column="32" selection-end-line="63" selection-end-column="32" />
                   <folding>
-                    <element signature="imports" expanded="true" />
+                    <element signature="e#1861#1862#0" expanded="true" />
+                    <element signature="e#1893#1894#0" expanded="true" />
+                    <element signature="docComment;method#keyTyped#0;class#Camera#0" />
+                    <element signature="method#keyTyped#0;class#Camera#0" />
+                    <element signature="docComment;method#keyPressed#0;class#Camera#0" />
+                    <element signature="method#keyPressed#0;class#Camera#0" />
+                    <element signature="docComment;method#keyReleased#0;class#Camera#0" />
+                    <element signature="method#keyReleased#0;class#Camera#0" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/com/Camera.java">
+            <entry file="file://$PROJECT_DIR$/src/com/Room.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
-                  <caret line="30" column="31" lean-forward="true" selection-start-line="30" selection-start-column="31" selection-end-line="30" selection-end-column="31" />
+                <state relative-caret-position="284">
+                  <caret line="330" lean-forward="true" selection-start-line="330" selection-end-line="330" />
                   <folding>
-                    <element signature="e#1814#1815#0" expanded="true" />
-                    <element signature="e#1845#1846#0" expanded="true" />
+                    <element signature="imports" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -110,8 +103,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/com/Lightbulb.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="724">
-                  <caret line="105" column="41" selection-start-line="105" selection-start-column="41" selection-end-line="105" selection-end-column="41" />
+                <state relative-caret-position="537">
+                  <caret line="61" column="50" selection-start-line="61" selection-start-column="50" selection-end-line="61" selection-end-column="50" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -122,8 +115,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/com/Main.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="792">
-                  <caret line="51" column="35" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
+                <state relative-caret-position="367">
+                  <caret line="32" selection-start-line="32" selection-end-line="32" />
                 </state>
               </provider>
             </entry>
@@ -131,8 +124,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/com/Commons.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="119">
-                  <caret line="90" column="57" lean-forward="true" selection-start-line="90" selection-start-column="57" selection-end-line="90" selection-end-column="57" />
+                <state relative-caret-position="430">
+                  <caret line="167" column="13" selection-start-line="167" selection-start-column="13" selection-end-line="167" selection-end-column="13" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -141,10 +134,31 @@
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/com/Cab.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1199">
+                  <caret line="166" column="34" selection-start-line="166" selection-start-column="34" selection-end-line="166" selection-end-column="34" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/com/Backgrounds.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="102">
-                  <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+                <state relative-caret-position="306">
+                  <caret line="24" column="26" selection-start-line="24" selection-start-column="26" selection-end-line="24" selection-end-column="26" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/com/CollisionDetectCamera.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="43">
+                  <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -180,9 +194,9 @@
         <option value="$PROJECT_DIR$/src/com/Cab.java" />
         <option value="$PROJECT_DIR$/src/com/CollisionDetectCamera.java" />
         <option value="$PROJECT_DIR$/src/com/Camera.java" />
-        <option value="$PROJECT_DIR$/src/com/Lightbulb.java" />
-        <option value="$PROJECT_DIR$/src/com/Commons.java" />
         <option value="$PROJECT_DIR$/src/com/Main.java" />
+        <option value="$PROJECT_DIR$/src/com/Commons.java" />
+        <option value="$PROJECT_DIR$/src/com/Lightbulb.java" />
       </list>
     </option>
   </component>
@@ -200,6 +214,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
       <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
@@ -219,22 +234,15 @@
               <item name="COMP2800GroupProject" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="COMP2800GroupProject" type="b2602c69:ProjectViewProjectNode" />
-              <item name="COMP2800GroupProject" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/user/Desktop/year 3/Semester2/COMP2800/GroupProject/COMP2800GroupProject/src/com/Cab.java" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1616799921170" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1617147772928" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -326,16 +334,16 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49870467" visible="true" weight="0.122068234" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49870467" visible="true" weight="0.11940298" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
-      <window_info id="Favorites" order="6" sideWeight="0.5012953" side_tool="true" visible="true" weight="0.122068234" />
+      <window_info id="Favorites" order="6" sideWeight="0.5012953" side_tool="true" weight="0.122068234" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.1626898" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.1637744" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -386,20 +394,10 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/Room.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5933">
-          <caret line="353" selection-start-line="353" selection-end-line="353" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/Cab.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12036">
-          <caret line="754" selection-start-line="754" selection-end-line="754" />
+        <state relative-caret-position="1199">
+          <caret line="166" column="34" selection-start-line="166" selection-start-column="34" selection-end-line="166" selection-end-column="34" />
         </state>
       </provider>
     </entry>
@@ -426,42 +424,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/Backgrounds.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/Lightbulb.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="306">
+          <caret line="24" column="26" selection-start-line="24" selection-start-column="26" selection-end-line="24" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="792">
-          <caret line="51" column="35" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
+        <state relative-caret-position="367">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/Commons.java">
+    <entry file="file://$PROJECT_DIR$/src/com/CollisionDetectCamera.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="90" column="57" lean-forward="true" selection-start-line="90" selection-start-column="57" selection-end-line="90" selection-end-column="57" />
+        <state relative-caret-position="43">
+          <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/CollisionDetectCamera.java">
+    <entry file="file://$PROJECT_DIR$/src/com/Commons.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="29" column="26" lean-forward="true" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="26" />
+        <state relative-caret-position="430">
+          <caret line="167" column="13" selection-start-line="167" selection-start-column="13" selection-end-line="167" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/Lightbulb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="54" column="12" lean-forward="true" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -470,11 +468,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/Camera.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="30" column="31" lean-forward="true" selection-start-line="30" selection-start-column="31" selection-end-line="30" selection-end-column="31" />
+        <state relative-caret-position="510">
+          <caret line="63" column="32" selection-start-line="63" selection-start-column="32" selection-end-line="63" selection-end-column="32" />
           <folding>
-            <element signature="e#1814#1815#0" expanded="true" />
-            <element signature="e#1845#1846#0" expanded="true" />
+            <element signature="e#1861#1862#0" expanded="true" />
+            <element signature="e#1893#1894#0" expanded="true" />
+            <element signature="docComment;method#keyTyped#0;class#Camera#0" />
+            <element signature="method#keyTyped#0;class#Camera#0" />
+            <element signature="docComment;method#keyPressed#0;class#Camera#0" />
+            <element signature="method#keyPressed#0;class#Camera#0" />
+            <element signature="docComment;method#keyReleased#0;class#Camera#0" />
+            <element signature="method#keyReleased#0;class#Camera#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/Room.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="330" lean-forward="true" selection-start-line="330" selection-end-line="330" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

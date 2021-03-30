@@ -12,5 +12,10 @@
     <orderEntry type="library" name="j3dutils" level="project" />
     <orderEntry type="library" name="j3dexamples" level="project" />
     <orderEntry type="library" name="j3dcore" level="project" />
+    <orderEntry type="library" name="j3dcore" level="project" />
+    <orderEntry type="library" name="j3dexamples" level="project" />
+    <orderEntry type="library" name="j3dutils" level="project" />
+    <orderEntry type="library" name="jogamp-fat" level="project" />
+    <orderEntry type="library" name="vecmath" level="project" />
   </component>
 </module>

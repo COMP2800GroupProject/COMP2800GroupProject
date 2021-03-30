@@ -166,9 +166,6 @@ public class Commons extends JPanel implements MouseListener, KeyListener {
 				picked.setAppearance(Cab.app("texture", "screen"));
 				picked.setUserData(1);
 			}
-			if((int) picked.getUserData() == 0 && picked.getName().equals("lightbulb")){
-
-			}
 			else{
 				picked.setAppearance(Cab.app("texture", "login"));
 				picked.setUserData(0);
