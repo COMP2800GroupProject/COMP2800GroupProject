@@ -1,9 +1,12 @@
-package com;/* *********************************************************
+/* *********************************************************
  * For use by students to work on assignments and project.
  * Permission required material. Contact: xyuan@uwindsor.ca
  **********************************************************/
 
+package com;
+
 import org.jogamp.java3d.*;
+import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.ColorCube;
 import org.jogamp.java3d.utils.picking.PickResult;
 import org.jogamp.java3d.utils.picking.PickTool;
@@ -13,14 +16,10 @@ import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector3d;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import com.jogamp.newt.event.MouseEvent;
-
 import java.awt.event.MouseListener;
-
 import javax.swing.*;
 import javax.xml.crypto.dsig.Transform;
 import java.awt.*;
@@ -37,6 +36,7 @@ public class Commons extends JPanel implements MouseListener {
 	public final static Color3f Magenta = new Color3f(1.0f, 0.0f, 1.0f);
 	public final static Color3f White = new Color3f(1.0f, 1.0f, 1.0f);
 	public final static Color3f Grey = new Color3f(0.5f, 0.5f, 0.5f);
+	public final static Color3f Black = new Color3f(0f, 0f, 0f);
 	public final static Color3f[] Clrs = {Blue, Green, Red, Yellow,
 			Cyan, Orange, Magenta, Grey};
 	public final static int clr_num = 8;
@@ -57,12 +57,10 @@ public class Commons extends JPanel implements MouseListener {
 		Alpha rotationAlpha = new Alpha(-1, r_num);
 		RotationInterpolator rot_beh = new RotationInterpolator(
 				rotationAlpha, my_TG, yAxis, 0.0f, (float) Math.PI * 2f );
-		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100);
+		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 150);
 		rot_beh.setSchedulingBounds(bounds);
 		return rot_beh;
 	}
-
-
 
 	/* a function to position viewer to 'eye' location */
 	public static void defineViewer(SimpleUniverse su) {
@@ -88,7 +86,6 @@ public class Commons extends JPanel implements MouseListener {
 		
 		return scene;
 	}
-
 
 	/* a constructor to set up and run the application */
 	public Commons(BranchGroup sceneBG) {
@@ -122,9 +119,7 @@ public class Commons extends JPanel implements MouseListener {
 		Camera camera = new Camera(vp, vpTG, sceneBG); //setup camera
 
 		sceneBG.addChild(camera.getKeyNavBeh()); // adding key movement to camera
-
-
-        sceneBG.compile(); // add moveTG branch group to SU
+    sceneBG.compile(); // add moveTG branch group to SU
 
 		su.addBranchGraph(sceneBG); // attach the scene to SimpleUniverse
 
@@ -147,8 +142,7 @@ public class Commons extends JPanel implements MouseListener {
 			pack();
 		}		
 	}
-	
-	
+
 	public void mouseClicked(java.awt.event.MouseEvent e) { //register mouse clicks for the computer screen
 		int x = e.getX(); int y = e.getY();
 		Point3d point3d = new Point3d(), center = new Point3d();
@@ -181,8 +175,6 @@ public class Commons extends JPanel implements MouseListener {
 					System.out.println("Could not load " + snd_pt);
 				else
 					soundJOAL.play(snd_pt);
-				
-				
 				screen.setUserData(1);
 				s.getChild(0).setUserData(1);
 			}
@@ -209,23 +201,17 @@ public class Commons extends JPanel implements MouseListener {
 		
 	}
 
-
-
 	@Override
 	public void mouseReleased(java.awt.event.MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
-
 	@Override
 	public void mouseEntered(java.awt.event.MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-
-
 
 	@Override
 	public void mouseExited(java.awt.event.MouseEvent e) {
@@ -241,7 +227,6 @@ public class Commons extends JPanel implements MouseListener {
 	 */
 	public void keyTyped(java.awt.event.KeyEvent e){
 
-
 	}
 
 	/**
@@ -251,7 +236,6 @@ public class Commons extends JPanel implements MouseListener {
 	 * @param e the event to be processed
 	 */
 	public void keyPressed(KeyEvent e){
-
 
 	}
 
@@ -263,11 +247,5 @@ public class Commons extends JPanel implements MouseListener {
 	 */
 	public void keyReleased(KeyEvent e){
 
-
-
 	}
-
-
-
-
 }

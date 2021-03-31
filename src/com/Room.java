@@ -14,10 +14,36 @@ import org.jogamp.vecmath.*;
 
 import java.io.FileNotFoundException;
 
-class Room {
+public class Room {
 
     private final static float BAR_HALF_WIDTH = 0.005f;
     private final static float CURTAIN_HEIGHT = 0.05f;
+
+    static TransformGroup createRoom(float scale){
+        float[] distances = {50f * scale, 70f * scale, 120f *scale};
+        Switch s = new Switch();
+        s.setCapability(Switch.ALLOW_SWITCH_WRITE);
+        TransformGroup tg = new TransformGroup();
+        tg.addChild(new Link(createFloor(scale)));
+        tg.addChild(new Link(createCeiling(scale)));
+        tg.addChild(new Link(createNorthWall(scale)));
+        tg.addChild(new Link(createEastWall(scale)));
+        tg.addChild(new Link(createWestWall(scale)));
+        tg.addChild(new Link(createSouthWall(scale)));
+        tg.addChild(new Link(createBars(scale)));
+        tg.addChild(new Link(createWindows(scale)));
+        tg.addChild(new Link(createDoors(scale)));
+        tg.addChild(new Link(createCurtains(scale)));
+        tg.addChild(new Link(createExteriorWalls(scale)));
+
+        DistanceLOD lod = new DistanceLOD(distances);
+        lod.addSwitch(s);
+        lod.setSchedulingBounds(new BoundingSphere(new Point3d(10f, 2.5f, 10f), Double.MAX_VALUE));
+        tg.addChild(lod);
+        tg.addChild(s);
+        return tg;
+    }
+
     /**
      * @return is a SharedGroup containing the floor object, already textured.
      */
