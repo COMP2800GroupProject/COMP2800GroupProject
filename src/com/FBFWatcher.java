@@ -35,6 +35,8 @@ public class FBFWatcher extends Thread {
 			while ((line = in.readLine()) != null) {
 				if (line.startsWith("ok"))
 					extractID(line.substring(3));
+				else if (line.startsWith("computer"))
+					extractState(line.substring(9));
 				else if (line.startsWith("full"))
 					fbf.disable("full game");             // disable client
 				else if (line.startsWith("tooFewPlayers"))
@@ -62,6 +64,10 @@ public class FBFWatcher extends Thread {
 		} catch (NumberFormatException e) {
 			System.out.println(e);
 		}
+	}
+
+	private void extractState(String line) {
+		fbf.setComputerState(line);
 	}
 
 	private void extractOther(String line) { // line format: <player id> <posn>

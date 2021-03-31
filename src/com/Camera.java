@@ -18,47 +18,30 @@ import java.awt.event.KeyListener;
 import java.util.Iterator;
 
 public class Camera implements KeyListener {
-
-    private Point3d defaultPos = new Point3d(5, 2.5, 1.25);
-
+    private Point3d defaultPos = new Point3d(9.2, 2.5, 9.2);
     BoundingSphere bounds = new BoundingSphere(new Point3d(0,0,0), Double.MAX_VALUE);
-
-    TransformGroup cameraTG;
     KeyNavigatorBehavior keyNavBeh;
 
     public Camera(ViewPlatform vp, TransformGroup vpTG, BranchGroup bg){
-
         defineCamera(vpTG);
-
         vpTG.addChild(vp);
-
         bg.addChild(vpTG);
-
-
-
     }
-
-//    public TransformGroup getTG(){
-//        return this.cameraTG;
-//    }
 
     void defineCamera(TransformGroup vpTG){
 
         addInvisSphere(vpTG);
 
-        Point3d center = new Point3d(0, 2.50, 0);               // define the point where the defaultPos looks at
+        Point3d center = new Point3d(4, 2.50, 5);               // define the point where the defaultPos looks at
         Vector3d up = new Vector3d(0, 1, 0);                 // define camera's up direction
         Transform3D view_TM = new Transform3D();
         view_TM.lookAt(defaultPos, center, up);
         view_TM.invert();
         vpTG.setTransform(view_TM);// set the TransformGroup of ViewingPlatform
 
-
         this.keyNavBeh = new KeyNavigatorBehavior(vpTG);
         BoundingSphere view_bounds = new BoundingSphere(new Point3d(), Double.MAX_VALUE);
         keyNavBeh.setSchedulingBounds(view_bounds);
-
-
     }
 
     KeyNavigatorBehavior getKeyNavBeh(){
@@ -71,14 +54,12 @@ public class Camera implements KeyListener {
     void addInvisSphere(TransformGroup vpTG){
         //create invisible ball for the camera. used for collision
         Appearance app = new Appearance();
-
         ColoringAttributes ca = new ColoringAttributes(Commons.White, ColoringAttributes.FASTEST);
 
         PolygonAttributes pa = new PolygonAttributes();
         pa.setCullFace(PolygonAttributes.CULL_NONE);
 
-        TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, .8f);
-
+        TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
         app.setColoringAttributes(ca);
         app.setTransparencyAttributes(ta);
         app.setPolygonAttributes(pa);
@@ -94,9 +75,7 @@ public class Camera implements KeyListener {
         CollisionDetectCamera cd = new CollisionDetectCamera(cameraBox);
 
         vpTG.addChild(cameraBox);
-
         vpTG.addChild(cd);
-
     }
 
     /**
@@ -107,7 +86,6 @@ public class Camera implements KeyListener {
      */
     public void keyTyped(java.awt.event.KeyEvent e){
 
-
     }
 
     /**
@@ -117,11 +95,9 @@ public class Camera implements KeyListener {
      * @param e the event to be processed
      */
     public void keyPressed(KeyEvent e){
-
         if(e.getKeyCode() == KeyEvent.VK_A){
             System.out.println("a");
         }
-
     }
 
     /**
@@ -132,9 +108,5 @@ public class Camera implements KeyListener {
      */
     public void keyReleased(KeyEvent e){
 
-
-
     }
-
-
 }

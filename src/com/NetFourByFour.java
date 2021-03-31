@@ -50,7 +50,7 @@ package com;
 import javax.swing.*;
 
 import org.jogamp.vecmath.Point3d;
-
+import org.jogamp.java3d.Shape3D;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -92,14 +92,12 @@ public class NetFourByFour extends JFrame {
         Commons.setEye(new Point3d(5, 2.5, 1.25));
         c.add(new Commons.MyGUI(Main.createScene(), "COMP2800 Project"));
 
-
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				disable("exiting");
 				System.exit(0);
 			}
 		});
-
 		pack();
 		setResizable(false); // fixed size display
 		setVisible(true);
@@ -192,6 +190,15 @@ public class NetFourByFour extends JFrame {
 				setStatus("Player " + currPlayer + " starts the game");
 		}
 	} 
+
+	synchronized public void setComputerState(String msg) {
+		Shape3D shape3d = Cab.BuildShape("computer");
+		shape3d.setAppearance(Cab.app("computer", "line"));
+	}
+
+	public void computerState(String type, String selection) {
+		out.println(type + " " + selection);
+	}
 
 	/* a function to remove the other player */
 	public void removePlayer() {
