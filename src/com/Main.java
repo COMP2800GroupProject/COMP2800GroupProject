@@ -9,10 +9,7 @@ import org.jogamp.vecmath.Vector3f;
 
 import java.util.Objects;
 
-
 public class Main {
-
-
     /* a function to create and return the scene BranchGroup */
     public static BranchGroup createScene() {
 

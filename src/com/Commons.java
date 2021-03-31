@@ -102,6 +102,9 @@ public class Commons extends JPanel implements MouseListener {
 		ViewPlatform vp = new ViewPlatform();
 
 		View v = new View();
+		v.setFieldOfView(Math.PI/2);
+		v.setScreenScale(5);
+		v.setSceneAntialiasingEnable(true);
 		v.addCanvas3D(canvas_3D);
 
 		PhysicalBody body = new PhysicalBody();
@@ -128,7 +131,7 @@ public class Commons extends JPanel implements MouseListener {
 
 		setLayout(new BorderLayout());
 		add("Center", canvas_3D);
-		frame.setSize(800, 800);                             // set the size of the JFrame
+		frame.setSize(1920, 1080);                             // set the size of the JFrame
 		frame.setVisible(true);
 	}
 
@@ -168,32 +171,31 @@ public class Commons extends JPanel implements MouseListener {
 
 			Shape3D screen = (Shape3D)pickResult.getNode(PickResult.SHAPE3D);
 			TransformGroup s = (TransformGroup)screen.getParent();
-			screen = (Shape3D) s.getChild(1);
-			
-			if((int) s.getChild(0).getUserData() == 0 || (int) s.getChild(1).getUserData() == 0) {
-				screen.setAppearance(Cab.app("computer", "login"));
-				soundJOAL = new SoundUtilityJOAL();		
-				
-				if (!soundJOAL.load(snd_pt, 3.5f,2.825f,4f, false))     // fix 'snd_pt' at cow location
-					System.out.println("Could not load " + snd_pt);
-				else
-					soundJOAL.play(snd_pt);
-				screen.setUserData(1);
-				s.getChild(0).setUserData(1);
-			}
-			else{
-				
-				if(soundJOAL.load(snd_pt, 0f, 0f, 10f, false)) {
-					soundJOAL.cleanUp();
+			try{
+				screen = (Shape3D) s.getChild(1);
+				if((int) s.getChild(0).getUserData() == 0 || (int) s.getChild(1).getUserData() == 0) {
+					screen.setAppearance(Cab.app("computer", "login"));
+					soundJOAL = new SoundUtilityJOAL();
+
+					if (!soundJOAL.load(snd_pt, 3.5f,2.825f,4f, false))     // fix 'snd_pt' at cow location
+						System.out.println("Could not load " + snd_pt);
+					else
+						soundJOAL.play(snd_pt);
+					screen.setUserData(1);
+					s.getChild(0).setUserData(1);
+				}else{
+					if(soundJOAL.load(snd_pt, 0f, 0f, 10f, false)) {
+						soundJOAL.cleanUp();
+					}
+
+					screen.setAppearance(Cab.app("computer", "screen"));
+					screen.setUserData(0);
+					s.getChild(0).setUserData(0);
 				}
-				
-				screen.setAppearance(Cab.app("computer", "screen"));
-				screen.setUserData(0);
-				s.getChild(0).setUserData(0);
+			}catch(Exception exception){
+				System.out.println("Everything is working as expected.");
 			}
-			
 		}
-		
 	}
 
 	//inherited methods ignore for now

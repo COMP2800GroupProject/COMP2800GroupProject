@@ -130,7 +130,7 @@ public class Cab {
 	}
 	
 	
-	private static Shape3D BuildShape(String name){ //builds shape depending on what tag is passed through
+	public static Shape3D BuildShape(String name){ //builds shape depending on what tag is passed through
 		
 		Shape3D shape = new Shape3D();
 		if(name == "desk") {
