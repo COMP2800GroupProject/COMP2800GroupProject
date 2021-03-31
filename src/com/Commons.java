@@ -74,6 +74,9 @@ public class Commons extends JPanel implements MouseListener {
 	    viewTransform.setTransform(view_TM);                 // set the TransformGroup of ViewingPlatform
 	}
 
+	public static void setEye(Point3d eye_position) {
+		eye = eye_position;
+	}
 
 	/* a function to build the content branch and attach to 'scene' */
 	private static BranchGroup createScene() {
