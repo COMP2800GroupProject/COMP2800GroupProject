@@ -1,5 +1,7 @@
 package com;
 
+import com.Commons;
+import com.Room;
 import org.jogamp.java3d.*;
 import org.jogamp.java3d.loaders.IncorrectFormatException;
 import org.jogamp.java3d.loaders.ParsingErrorException;
@@ -12,7 +14,7 @@ import java.io.FileNotFoundException;
 
 public class objects {
 
-    static SharedGroup soundObject() {
+    public static SharedGroup soundObject() {
         SharedGroup sg = new SharedGroup();
         Transform3D translate = new Transform3D();
         translate.setTranslation(new Vector3f(new Vector3f(7.35f, 2f, 9.85f)));

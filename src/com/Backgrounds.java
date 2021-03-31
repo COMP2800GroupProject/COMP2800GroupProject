@@ -12,11 +12,7 @@ import org.jogamp.vecmath.Point3d;
 
 public class Backgrounds {
 
-
-
 	 static Background createBackground() {
-
-		
 		String filename = "images/windowView.png";
 		TextureLoader loader = new TextureLoader(filename, null);
 		ImageComponent2D image = loader.getImage();

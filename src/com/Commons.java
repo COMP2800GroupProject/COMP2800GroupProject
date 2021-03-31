@@ -4,10 +4,12 @@ package com;/* *********************************************************
  **********************************************************/
 
 import org.jogamp.java3d.*;
+import org.jogamp.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import org.jogamp.java3d.utils.geometry.ColorCube;
 import org.jogamp.java3d.utils.picking.PickResult;
 import org.jogamp.java3d.utils.picking.PickTool;
 import org.jogamp.java3d.utils.universe.SimpleUniverse;
+import org.jogamp.java3d.utils.universe.ViewingPlatform;
 import org.jogamp.vecmath.Color3f;
 import org.jogamp.vecmath.Point3d;
 import org.jogamp.vecmath.Vector3d;
@@ -34,6 +36,7 @@ public class Commons extends JPanel implements MouseListener {
 	public final static Color3f Magenta = new Color3f(1.0f, 0.0f, 1.0f);
 	public final static Color3f White = new Color3f(1.0f, 1.0f, 1.0f);
 	public final static Color3f Grey = new Color3f(0.5f, 0.5f, 0.5f);
+	public final static Color3f Black = new Color3f(0f, 0f, 0f);
 	public final static Color3f[] Clrs = {Blue, Green, Red, Yellow,
 			Cyan, Orange, Magenta, Grey};
 	public final static int clr_num = 8;
@@ -54,7 +57,7 @@ public class Commons extends JPanel implements MouseListener {
 		Alpha rotationAlpha = new Alpha(-1, r_num);
 		RotationInterpolator rot_beh = new RotationInterpolator(
 				rotationAlpha, my_TG, yAxis, 0.0f, (float) Math.PI * 2f );
-		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100);
+		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 150);
 		rot_beh.setSchedulingBounds(bounds);
 		return rot_beh;
 	}
