@@ -28,10 +28,6 @@ public class Camera implements KeyListener {
         bg.addChild(vpTG);
     }
 
-//    public TransformGroup getTG(){
-//        return this.cameraTG;
-//    }
-
     void defineCamera(TransformGroup vpTG){
 
         addInvisSphere(vpTG);
@@ -64,7 +60,6 @@ public class Camera implements KeyListener {
         pa.setCullFace(PolygonAttributes.CULL_NONE);
 
         TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 1f);
-
         app.setColoringAttributes(ca);
         app.setTransparencyAttributes(ta);
         app.setPolygonAttributes(pa);
