@@ -14,13 +14,18 @@ import java.io.FileNotFoundException;
 
 public class objects {
 
-    public static SharedGroup soundObject() {
+    public static SharedGroup createObject(String filename, Vector3f pos) {
         SharedGroup sg = new SharedGroup();
         Transform3D translate = new Transform3D();
-        translate.setTranslation(new Vector3f(new Vector3f(7.35f, 2f, 9.85f)));
+
+        if(filename.equals("basw57iwvs93.obj")){
+            translate.rotX(-Math.PI / 2);
+        }
+
+        translate.setTranslation(pos);
         TransformGroup objectTG = new TransformGroup(translate);
         objectTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        objectTG.addChild(loadShape(0.10f));
+        objectTG.addChild(loadShape(0.10f, filename));
         sg.addChild(objectTG);
         return sg;
     }
@@ -59,7 +64,7 @@ public class objects {
      * @param scale    scale of tg
      * @return TransformGroup with the code object
      */
-    private static TransformGroup loadShape(final float scale) {
+    private static TransformGroup loadShape(final float scale, String filename) {
 
         int flags = ObjectFile.RESIZE | ObjectFile.TRIANGULATE | ObjectFile.STRIPIFY;
 
@@ -68,11 +73,16 @@ public class objects {
         Scene s = null;
 
         try {
-            s = f.load("images/door_knob_smooth (1).obj");
+            s = f.load("images/" + filename);
         } catch (FileNotFoundException | ParsingErrorException | IncorrectFormatException e) {
             System.err.println("testing" + e);
             System.exit(1);
         }
+
+        if(filename.equals("basw57iwvs93.obj")){
+
+        }
+
 
         BranchGroup objBG = s.getSceneGroup();
         Shape3D table_cow_shape = (Shape3D) objBG.getChild(0);

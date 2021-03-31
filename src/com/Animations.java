@@ -25,6 +25,7 @@ public class Animations {
 
     static TransformGroup createFan(Vector3f position) {
         Transform3D posSet = new Transform3D();
+        posSet.rotY(Math.PI / 2);
 		TransformGroup sceneTG = new TransformGroup(); //Creates Transform Group
         sceneTG.setCapability(Group.ALLOW_CHILDREN_WRITE);
         posSet.setTranslation(position);

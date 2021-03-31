@@ -77,7 +77,7 @@ public class Camera implements KeyListener {
         PolygonAttributes pa = new PolygonAttributes();
         pa.setCullFace(PolygonAttributes.CULL_NONE);
 
-        TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, 0.5f);
+        TransparencyAttributes ta = new TransparencyAttributes(TransparencyAttributes.FASTEST, .8f);
 
         app.setColoringAttributes(ca);
         app.setTransparencyAttributes(ta);
